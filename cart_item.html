@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart Items API Documentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cart_item.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto p-6 max-w-4xl">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Cart Items API Documentation</h1>
+    <p class="text-gray-600 mb-8 text-center">Interact with the Cart Items API endpoints hosted at <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank"></a></p>
+    <p class="text-gray-600 mb-8 text-center"><a href="index.html" class="text-blue-600 hover:underline">Back to API Testing Hub</a></p>
+
+    <!-- Add New Cart Item -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Add New Cart Item</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /cart/items</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Adds a new item to the authenticated user's cart.</p>
+      <form id="add-cart-item-form" class="space-y-4">
+        <div>
+          <label for="add-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
+          <input type="number" id="add-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="add-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
+          <input type="number" id="add-product-id" name="product_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="add-quantity" class="block text-sm font-medium text-gray-700">Quantity *</label>
+          <input type="number" id="add-quantity" name="quantity" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add Cart Item</button>
+      </form>
+      <pre id="add-cart-item-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+    </div>
+
+    <!-- Get User's Cart Items -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get User's Cart Items</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /cart/items</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all cart items for the authenticated user.</p>
+      <form id="get-user-cart-items-form" class="space-y-4">
+        <div>
+          <label for="get-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
+          <input type="number" id="get-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Cart Items</button>
+      </form>
+      <pre id="get-user-cart-items-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+    </div>
+
+    <!-- Get Cart Item by ID -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Cart Item by ID</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /cart/items/<cart_item_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific cart item by ID (owner or admin only).</p>
+      <form id="get-cart-item-by-id-form" class="space-y-4">
+        <div>
+          <label for="get-cart-item-id" class="block text-sm font-medium text-gray-700">Cart Item ID *</label>
+          <input type="number" id="get-cart-item-id" name="cart_item_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="get-cart-item-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
+          <input type="number" id="get-cart-item-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Cart Item</button>
+      </form>
+      <pre id="get-cart-item-by-id-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+    </div>
+
+    <!-- Update Cart Item -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Update Cart Item</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /cart/items/<cart_item_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates the quantity of a specific cart item (owner or admin only).</p>
+      <form id="update-cart-item-form" class="space-y-4">
+        <div>
+          <label for="update-cart-item-id" class="block text-sm font-medium text-gray-700">Cart Item ID *</label>
+          <input type="number" id="update-cart-item-id" name="cart_item_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="update-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
+          <input type="number" id="update-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="update-quantity" class="block text-sm font-medium text-gray-700">Quantity *</label>
+          <input type="number" id="update-quantity" name="quantity" min="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Cart Item</button>
+      </form>
+      <pre id="update-cart-item-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+    </div>
+
+    <!-- Delete Cart Item -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Delete Cart Item</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /cart/items/<cart_item_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a specific cart item (owner or admin only).</p>
+      <form id="delete-cart-item-form" class="space-y-4">
+        <div>
+          <label for="delete-cart-item-id" class="block text-sm font-medium text-gray-700">Cart Item ID *</label>
+          <input type="number" id="delete-cart-item-id" name="cart_item_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="delete-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
+          <input type="number" id="delete-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Cart Item</button>
+      </form>
+      <pre id="delete-cart-item-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+    </div>
+
+    <!-- Get Cart Items by User (Admin Only) -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Get Cart Items by User (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /admin/cart_items/user/<user_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all cart items for a specific user (admin only).</p>
+      <form id="get-cart-items-by-user-form" class="space-y-4">
+        <div>
+          <label for="get-cart-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
+          <input type="number" id="get-cart-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Cart Items</button>
+      </form>
+      <pre id="get-cart-items-by-user-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+    </div>
+
+    <!-- Get All Cart Items (Admin Only) -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Get All Cart Items (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /admin/cart_items</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all cart items (admin only).</p>
+      <form id="get-all-cart-items-form" class="space-y-4">
+        <div>
+          <label for="get-page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
+          <input type="number" id="get-page" name="page" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="get-per-page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
+          <input type="number" id="get-per-page" name="per_page" min="1" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Cart Items</button>
+      </form>
+      <pre id="get-all-cart-items-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+    </div>
+  </div>
+</body>
+</html>

@@ -29,3 +29,13 @@ feat: add products.js module to manage product and address APIs
 -----
 
 feat: add review.html review.js and module to manage product and address APIs
+
+-----
+
+Fix: Refactor order endpoints to return dicts and prevent JSON serialization errors
+
+- Converted all SQLite row results to Python dictionaries in order-related methods.
+- Fixed get_order_by_id, get_orders_by_user, and get_orders to support JSON responses correctly.
+- Improved logging for better debugging of API calls.
+- Ensured pagination works properly in admin order listing.
+- Enabled foreign key constraints and consistent row_factory usage in database connection.

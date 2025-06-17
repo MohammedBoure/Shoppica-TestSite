@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reviews API Documentation</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/review.js"></script>
 </head>
@@ -38,7 +40,7 @@
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add Review</button>
       </form>
-      <div id="add-review-response" class="mt-4 text-sm"></div>
+      <pre id="add-review-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
     </div>
 
     <!-- Get Review by ID -->
@@ -53,7 +55,7 @@
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Review</button>
       </form>
-      <div id="get-review-by-id-response" class="mt-4 text-sm"></div>
+      <pre id="get-review-by-id-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
     </div>
 
     <!-- Get Reviews by Product -->
@@ -68,7 +70,7 @@
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Reviews</button>
       </form>
-      <div id="get-reviews-by-product-response" class="mt-4 text-sm"></div>
+      <pre id="get-reviews-by-product-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
     </div>
 
     <!-- Update Review -->
@@ -95,7 +97,7 @@
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Review</button>
       </form>
-      <div id="update-review-response" class="mt-4 text-sm"></div>
+      <pre id="update-review-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
     </div>
 
     <!-- Delete Review -->
@@ -114,7 +116,7 @@
         </div>
         <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Review</button>
       </form>
-      <div id="delete-review-response" class="mt-4 text-sm"></div>
+      <pre id="delete-review-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
     </div>
 
     <!-- Get All Reviews (Admin Only) -->
@@ -133,7 +135,7 @@
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Reviews</button>
       </form>
-      <div id="get-all-reviews-response" class="mt-4 text-sm"></div>
+      <pre id="get-all-reviews-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
     </div>
   </div>
 </body>

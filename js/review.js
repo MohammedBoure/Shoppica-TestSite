@@ -10,8 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const displayResponse = (elementId, response) => {
     const responseElement = document.getElementById(elementId);
     if (responseElement) {
-      responseElement.textContent = JSON.stringify(response, null, 2);
-      responseElement.classList.add('bg-gray-100', 'p-4', 'rounded-md', 'font-mono', 'text-sm');
+      const codeElement = responseElement.querySelector('code');
+      if (codeElement) {
+        codeElement.textContent = JSON.stringify(response, null, 2);
+        Prism.highlightAll(); // Re-highlight syntax
+      }
     }
   };
 
