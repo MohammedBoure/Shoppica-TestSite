@@ -79,3 +79,6 @@ feat: add category_discounts.html and category_discounts.js for API integration
 -----
 
 style(ui): enhance API response display and unify response layout
+-----
+
+docs(readme): update README to reflect API testing purpose and usage
