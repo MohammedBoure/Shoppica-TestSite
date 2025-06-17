@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payments API Documentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/payment.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto p-6 max-w-4xl">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Payments API Documentation</h1>
+    <p class="text-gray-600 mb-8 text-center">Interact with the Payments API endpoints hosted at <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank"></a></p>
+    <p class="text-gray-600 mb-8 text-center"><a href="index.html" class="text-blue-600 hover:underline">Back to API Testing Hub</a></p>
+
+    <!-- Add New Payment -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Add New Payment</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /payments</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Creates a new payment for an order (authenticated user only).</p>
+      <form id="add-payment-form" class="space-y-4">
+        <div>
+          <label for="add-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
+          <input type="number" id="add-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="add-order-id" class="block text-sm font-medium text-gray-700">Order ID *</label>
+          <input type="number" id="add-order-id" name="order_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="add-payment-method" class="block text-sm font-medium text-gray-700">Payment Method *</label>
+          <select id="add-payment-method" name="payment_method" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+            <option value="credit_card">Credit Card</option>
+            <option value="paypal">PayPal</option>
+            <option value="bank_transfer">Bank Transfer</option>
+          </select>
+        </div>
+        <div>
+          <label for="add-transaction-id" class="block text-sm font-medium text-gray-700">Transaction ID</label>
+          <input type="text" id="add-transaction-id" name="transaction_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="add-payment-status" class="block text-sm font-medium text-gray-700">Payment Status (default: unpaid)</label>
+          <select id="add-payment-status" name="payment_status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <option value="unpaid">Unpaid</option>
+            <option value="paid">Paid</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add Payment</button>
+      </form>
+      <div id="add-payment-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Payment by ID -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get Payment by ID</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /payments/<payment_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific payment by its ID (authenticated user only).</p>
+      <form id="get-payment-by-id-form" class="space-y-4">
+        <div>
+          <label for="get-payment-id" class="block text-sm font-medium text-gray-700">Payment ID *</label>
+          <input type="number" id="get-payment-id" name="payment_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="get-payment-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
+          <input type="number" id="get-payment-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Payment</button>
+      </form>
+      <div id="get-payment-by-id-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Payments by Order -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Payments by Order</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /payments/order/<order_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all payments for a specific order (authenticated user only).</p>
+      <form id="get-payments-by-order-form" class="space-y-4">
+        <div>
+          <label for="get-order-id" class="block text-sm font-medium text-gray-700">Order ID *</label>
+          <input type="number" id="get-order-id" name="order_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="get-order-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
+          <input type="number" id="get-order-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Payments</button>
+      </form>
+      <div id="get-payments-by-order-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Update Payment -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Update Payment (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /payments/<payment_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a payment's details (admin only).</p>
+      <form id="update-payment-form" class="space-y-4">
+        <div>
+          <label for="update-payment-id" class="block text-sm font-medium text-gray-700">Payment ID *</label>
+          <input type="number" id="update-payment-id" name="payment_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="update-payment-method" class="block text-sm font-medium text-gray-700">Payment Method</label>
+          <select id="update-payment-method" name="payment_method" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <option value="">-- Select Method --</option>
+            <option value="credit_card">Credit Card</option>
+            <option value="paypal">PayPal</option>
+            <option value="bank_transfer">Bank Transfer</option>
+          </select>
+        </div>
+        <div>
+          <label for="update-payment-status" class="block text-sm font-medium text-gray-700">Payment Status</label>
+          <select id="update-payment-status" name="payment_status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <option value="">-- Select Status --</option>
+            <option value="unpaid">Unpaid</option>
+            <option value="paid">Paid</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+        <div>
+          <label for="update-transaction-id" class="block text-sm font-medium text-gray-700">Transaction ID</label>
+          <input type="text" id="update-transaction-id" name="transaction_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Payment</button>
+      </form>
+      <div id="update-payment-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Delete Payment -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Delete Payment (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /payments/<payment_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a payment by its ID (admin only).</p>
+      <form id="delete-payment-form" class="space-y-4">
+        <div>
+          <label for="delete-payment-id" class="block text-sm font-medium text-gray-700">Payment ID *</label>
+          <input type="number" id="delete-payment-id" name="payment_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Payment</button>
+      </form>
+      <div id="delete-payment-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get All Payments -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Get All Payments (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /payments</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all payments (admin only).</p>
+      <form id="get-all-payments-form" class="space-y-4">
+        <div>
+          <label for="get-page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
+          <input type="number" id="get-page" name="page" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="get-per-page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
+          <input type="number" id="get-per-page" name="per_page" min="1" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Payments</button>
+      </form>
+      <div id="get-all-payments-response" class="mt-4 text-sm"></div>
+    </div>
+  </div>
+</body>
+</html>

@@ -48,3 +48,12 @@ feat: Add full CRUD support for order items UI
 - Added frontend form handling and dynamic table rendering for order items.
 - Integrated API calls to back-end endpoints for seamless interaction.
 - Improved user experience with validation and basic error handling.
+-----
+
+feat: add payment.html and js/payment.js for full payment functionality
+
+- Created payment.html page for handling user payment input and display
+- Implemented js/payment.js with full CRUD operations for payments
+- Supports creating new payments, viewing existing ones, updating status, and deleting
+- Integrated UI with backend payment API endpoints
+- Added basic form validation and dynamic UI feedback
