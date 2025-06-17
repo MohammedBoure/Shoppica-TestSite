@@ -25,3 +25,7 @@ feat: add products.js module to manage product and address APIs
 - Implemented functions for creating, updating, deleting, and retrieving addresses
 - Integrated support for both user and admin address endpoints
 - Added image upload functionality for products
+
+-----
+
+feat: add review.html review.js and module to manage product and address APIs
