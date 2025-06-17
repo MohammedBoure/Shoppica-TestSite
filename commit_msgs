@@ -61,3 +61,7 @@ feat: add payment.html and js/payment.js for full payment functionality
 -----
 
 Add discount.html and discount.js with full CRUD functionality based on API documentation
+
+-----
+
+Feat: Add frontend interface (HTML/JS) for managing discount usages via API
