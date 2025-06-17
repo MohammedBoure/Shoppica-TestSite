@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Discounts API Documentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/product_discounts.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto p-6 max-w-4xl">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Product Discounts API Documentation</h1>
+    <p class="text-gray-600 mb-8 text-center">Interact with the Product Discounts API endpoints hosted at <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank"></a></p>
+    <p class="text-gray-600 mb-8 text-center"><a href="index.html" class="text-blue-600 hover:underline">Back to API Testing Hub</a></p>
+
+    <!-- Add New Product Discount -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Add New Product Discount (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /product_discounts</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Creates a new product discount (admin only).</p>
+      <form id="add-product-discount-form" class="space-y-4">
+        <div>
+          <label for="add-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
+          <input type="number" id="add-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="add-discount-percent" class="block text-sm font-medium text-gray-700">Discount Percent (0-100) *</label>
+          <input type="number" id="add-discount-percent" name="discount_percent" step="0.01" min="0" max="100" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="add-starts-at" class="block text-sm font-medium text-gray-700">Starts At (ISO 8601, e.g., 2025-06-16T12:00:00Z)</label>
+          <input type="datetime-local" id="add-starts-at" name="starts_at" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="add-ends-at" class="block text-sm font-medium text-gray-700">Ends At (ISO 8601, e.g., 2025-06-30T23:59:59Z)</label>
+          <input type="datetime-local" id="add-ends-at" name="ends_at" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="add-is-active" class="block text-sm font-medium text-gray-700">Is Active (default: Active)</label>
+          <select id="add-is-active" name="is_active" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+          </select>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add Product Discount</button>
+      </form>
+      <div id="add-product-discount-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Product Discount by ID -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get Product Discount by ID (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /product_discounts/&lt;discount_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific product discount by its ID (admin only).</p>
+      <form id="get-product-discount-by-id-form" class="space-y-4">
+        <div>
+          <label for="get-discount-id" class="block text-sm font-medium text-gray-700">Discount ID *</label>
+          <input type="number" id="get-discount-id" name="discount_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Product Discount</button>
+      </form>
+      <div id="get-product-discount-by-id-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Product Discounts by Product -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Product Discounts by Product</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /product_discounts/product/&lt;product_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all discounts for a specific product (public access).</p>
+      <form id="get-product-discounts-by-product-form" class="space-y-4">
+        <div>
+          <label for="get-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
+          <input type="number" id="get-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Product Discounts</button>
+      </form>
+      <div id="get-product-discounts-by-product-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Valid Product Discounts -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Get Valid Product Discounts</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /product_discounts/valid/&lt;product_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all valid discounts for a specific product (public access).</p>
+      <form id="get-valid-product-discounts-form" class="space-y-4">
+        <div>
+          <label for="get-valid-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
+          <input type="number" id="get-valid-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Valid Product Discounts</button>
+      </form>
+      <div id="get-valid-product-discounts-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Update Product Discount -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Update Product Discount (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /product_discounts/&lt;discount_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a product discount's details (admin only).</p>
+      <form id="update-product-discount-form" class="space-y-4">
+        <div>
+          <label for="update-discount-id" class="block text-sm font-medium text-gray-700">Discount ID *</label>
+          <input type="number" id="update-discount-id" name="discount_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="update-discount-percent" class="block text-sm font-medium text-gray-700">Discount Percent (0-100)</label>
+          <input type="number" id="update-discount-percent" name="discount_percent" step="0.01" min="0" max="100" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="update-starts-at" class="block text-sm font-medium text-gray-700">Starts At (ISO 8601, e.g., 2025-07-01T00:00:00Z)</label>
+          <input type="datetime-local" id="update-starts-at" name="starts_at" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="update-ends-at" class="block text-sm font-medium text-gray-700">Ends At (ISO 8601, e.g., 2025-07-15T23:59:59Z)</label>
+          <input type="datetime-local" id="update-ends-at" name="ends_at" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="update-is-active" class="block text-sm font-medium text-gray-700">Is Active</label>
+          <select id="update-is-active" name="is_active" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <option value="">-- Select Status --</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+          </select>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Product Discount</button>
+      </form>
+      <div id="update-product-discount-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Delete Product Discount -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Delete Product Discount (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /product_discounts/&lt;discount_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a product discount by its ID (admin only).</p>
+      <form id="delete-product-discount-form" class="space-y-4">
+        <div>
+          <label for="delete-discount-id" class="block text-sm font-medium text-gray-700">Discount ID *</label>
+          <input type="number" id="delete-discount-id" name="discount_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Product Discount</button>
+      </form>
+      <div id="delete-product-discount-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get All Product Discounts -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Get All Product Discounts (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /product_discounts</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all product discounts (admin only).</p>
+      <form id="get-all-product-discounts-form" class="space-y-4">
+        <div>
+          <label for="get-page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
+          <input type="number" id="get-page" name="page" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="get-per-page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
+          <input type="number" id="get-per-page" name="per_page" min="1" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch All Product Discounts</button>
+      </form>
+      <div id="get-all-product-discounts-response" class="mt-4 text-sm"></div>
+    </div>
+  </div>
+</body>
+</html>

@@ -65,3 +65,6 @@ Add discount.html and discount.js with full CRUD functionality based on API docu
 -----
 
 Feat: Add frontend interface (HTML/JS) for managing discount usages via API
+-----
+
+Add product_discounts.html and product_discounts.js to support Product Discounts API integration
