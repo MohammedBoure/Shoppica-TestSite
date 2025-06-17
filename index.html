@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shoppica API Testing Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto p-6 max-w-4xl">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Shoppica API Testing Hub</h1>
+    <p class="text-gray-600 mb-4 text-center">Select an API module to test its endpoints:</p>
+
+    <!-- Backend URL Input -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">Set Backend URL</h2>
+      <p class="text-gray-600 mb-4">Current Backend URL: <span id="current-url" class="font-medium"></span></p>
+      <form id="set-url-form" class="space-y-4">
+        <div>
+          <label for="backend-url" class="block text-sm font-medium text-gray-700">Enter Backend URL *</label>
+          <input type="url" id="backend-url" name="backend_url" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required placeholder="http://127.0.0.1:5000/api">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Set URL</button>
+      </form>
+      <div id="set-url-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <a href="addresses.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Addresses API</a>
+      <a href="auth.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Authentication API</a>
+      <a href="cart_item.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Cart Item API</a>
+      <a href="category.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Category API</a>
+      <a href="category_discounts.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Category Discounts API</a>
+      <a href="discount_usage.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Discount Usage API</a>
+      <a href="discounts.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Discounts API</a>
+      <a href="order_item.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Order Item API</a>
+      <a href="orders.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Orders API</a>
+      <a href="payment.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Payment API</a>
+      <a href="product_discounts.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Product Discounts API</a>
+      <a href="products.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Products API</a>
+      <a href="review.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">Review API</a>
+      <a href="user.html" class="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 text-center font-medium">User API</a>
+    </div>
+  </div>
+
+  <script>
+    // Display current URL and handle URL setting
+    document.addEventListener('DOMContentLoaded', () => {
+      const currentUrlElement = document.getElementById('current-url');
+      const backendUrlInput = document.getElementById('backend-url');
+      const setUrlForm = document.getElementById('set-url-form');
+      const setUrlResponse = document.getElementById('set-url-response');
+
+      // Get current URL from localStorage or fallback to config.js BASE_URL
+      const currentUrl = localStorage.getItem('backend_url') || BASE_URL;
+      currentUrlElement.textContent = currentUrl;
+      backendUrlInput.value = currentUrl;
+
+      setUrlForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const newUrl = formData.get('backend_url').trim();
+
+        if (!newUrl) {
+          setUrlResponse.innerHTML = `<pre class="p-4 rounded bg-red-100 text-red-800">URL is required</pre>`;
+          return;
+        }
+
+        try {
+          new URL(newUrl); // Validate URL format
+          localStorage.setItem('backend_url', newUrl);
+          currentUrlElement.textContent = newUrl;
+          setUrlResponse.innerHTML = `<pre class="p-4 rounded bg-green-100 text-green-800">Backend URL updated successfully</pre>`;
+        } catch (error) {
+          setUrlResponse.innerHTML = `<pre class="p-4 rounded bg-red-100 text-red-800">Invalid URL format</pre>`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
