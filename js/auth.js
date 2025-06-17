@@ -7,6 +7,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
   if (!data.email || !data.password) {
     displayResponse('login-response', { error: 'Email and password are required' }, true);
+    localStorage.setItem('user_id', result.user.id);
     return;
   }
 

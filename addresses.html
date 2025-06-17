@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Addresses API Documentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config.js"></script>
+  <script src="js/addresses.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto p-6 max-w-4xl">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Addresses API Documentation</h1>
+    <p class="text-gray-600 mb-8 text-center">Interact with the Addresses API endpoints hosted at <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank"></a></p>
+    <p class="text-gray-600 mb-8 text-center"><a href="index.html" class="text-blue-600 hover:underline">Back to API Testing Hub</a></p>
+
+    <!-- Add New Address -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Add New Address</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /addresses</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Adds a new address for the authenticated user.</p>
+      <form id="add-address-form" class="space-y-4">
+        <div>
+          <label for="address_line1" class="block text-sm font-medium text-gray-700">Address Line 1 *</label>
+          <input type="text" id="address_line1" name="address_line1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="address_line2" class="block text-sm font-medium text-gray-700">Address Line 2</label>
+          <input type="text" id="address_line2" name="address_line2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="city" class="block text-sm font-medium text-gray-700">City *</label>
+          <input type="text" id="city" name="city" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="state" class="block text-sm font-medium text-gray-700">State</label>
+          <input type="text" id="state" name="state" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="postal_code" class="block text-sm font-medium text-gray-700">Postal Code</label>
+          <input type="text" id="postal_code" name="postal_code" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="country" class="block text-sm font-medium text-gray-700">Country *</label>
+          <input type="text" id="country" name="country" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="is_default" class="block text-sm font-medium text-gray-700">Is Default</label>
+          <input type="checkbox" id="is_default" name="is_default" class="mt-1">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add Address</button>
+      </form>
+      <div id="add-address-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get User's Addresses -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get User's Addresses</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /addresses/me</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all addresses for the authenticated user.</p>
+      <button id="get-user-addresses-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Addresses</button>
+      <div id="get-user-addresses-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Address by ID -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Address by ID</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /addresses/&lt;address_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific address by its ID (user must own it or be admin).</p>
+      <form id="get-address-by-id-form" class="space-y-4">
+        <div>
+          <label for="address_id" class="block text-sm font-medium text-gray-700">Address ID *</label>
+          <input type="number" id="address_id" name="address_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Address</button>
+      </form>
+      <div id="get-address-by-id-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Update Address -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Update Address</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /addresses/&lt;address_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a specific address (user must own it or be admin).</p>
+      <form id="update-address-form" class="space-y-4">
+        <div>
+          <label for="update-address-id" class="block text-sm font-medium text-gray-700">Address ID *</label>
+          <input type="number" id="update-address-id" name="address_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="update-address-line1" class="block text-sm font-medium text-gray-700">Address Line 1</label>
+          <input type="text" id="update-address-line1" name="address_line1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="update-address-line2" class="block text-sm font-medium text-gray-700">Address Line 2</label>
+          <input type="text" id="update-address-line2" name="address_line2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="update-city" class="block text-sm font-medium text-gray-700">City</label>
+          <input type="text" id="update-city" name="city" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="update-state" class="block text-sm font-medium text-gray-700">State</label>
+          <input type="text" id="update-state" name="state" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="update-postal-code" class="block text-sm font-medium text-gray-700">Postal Code</label>
+          <input type="text" id="update-postal-code" name="postal_code" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="update-country" class="block text-sm font-medium text-gray-700">Country</label>
+          <input type="text" id="update-country" name="country" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="update-is-default" class="block text-sm font-medium text-gray-700">Is Default</label>
+          <input type="checkbox" id="update-is-default" name="is_default" class="mt-1">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Address</button>
+      </form>
+      <div id="update-address-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Delete Address -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Delete Address</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /addresses/&lt;address_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a specific address (user must own it or be admin).</p>
+      <form id="delete-address-form" class="space-y-4">
+        <div>
+          <label for="delete-address-id" class="block text-sm font-medium text-gray-700">Address ID *</label>
+          <input type="number" id="delete-address-id" name="address_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Address</button>
+      </form>
+      <div id="delete-address-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Addresses by User (Admin Only) -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Get Addresses by User (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /admin/addresses/user/&lt;user_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all addresses for a specific user (admin only).</p>
+      <form id="get-addresses-by-user-form" class="space-y-4">
+        <div>
+          <label for="user_id" class="block text-sm font-medium text-gray-700">User ID *</label>
+          <input type="number" id="user_id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Addresses</button>
+      </form>
+      <div id="get-addresses-by-user-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get All Addresses (Admin Only) -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Get All Addresses (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /admin/addresses</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all addresses (admin only).</p>
+      <form id="get-all-addresses-form" class="space-y-4">
+        <div>
+          <label for="page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
+          <input type="number" id="page" name="page" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="per_page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
+          <input type="number" id="per_page" name="per_page" min="1" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Addresses</button>
+      </form>
+      <div id="get-all-addresses-response" class="mt-4 text-sm"></div>
+    </div>
+  </div>
+</body>
+</html>

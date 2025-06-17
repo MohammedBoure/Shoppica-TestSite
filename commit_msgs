@@ -2,3 +2,10 @@
 -----
 
 feat(tests): add HTML-based test UI for user and auth endpoints
+-----
+
+feat: add addresses.js frontend module to interact with address APIs
+
+- Created addresses.js to handle API requests for address management
+- Includes functions for adding, updating, deleting, and fetching addresses
+- Supports both user and admin endpoints
