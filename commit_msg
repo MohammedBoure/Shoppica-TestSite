@@ -1,7 +1,7 @@
-Fix: Refactor order endpoints to return dicts and prevent JSON serialization errors
+feat: Add full CRUD support for order items UI
 
-- Converted all SQLite row results to Python dictionaries in order-related methods.
-- Fixed get_order_by_id, get_orders_by_user, and get_orders to support JSON responses correctly.
-- Improved logging for better debugging of API calls.
-- Ensured pagination works properly in admin order listing.
-- Enabled foreign key constraints and consistent row_factory usage in database connection.
+- Created order_item.html to manage order items via the browser interface.
+- Implemented full CRUD operations (Create, Read, Update, Delete, and Search) in js/order_item.js.
+- Added frontend form handling and dynamic table rendering for order items.
+- Integrated API calls to back-end endpoints for seamless interaction.
+- Improved user experience with validation and basic error handling.
