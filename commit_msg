@@ -1,4 +1,1 @@
-feat: add category_discounts.html and category_discounts.js for API integration
-
-- Added HTML and JS files to support category discounts features
-- Integrated front-end with category discounts API
+style(ui): enhance API response display and unify response layout
