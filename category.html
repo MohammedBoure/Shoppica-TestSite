@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories API Documentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config.js"></script>
+  <script src="js/categories.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto p-6 max-w-4xl">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Categories API Documentation</h1>
+    <p class="text-gray-600 mb-8 text-center">Interact with the Categories API endpoints hosted at <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank"></a></p>
+    <p class="text-gray-600 mb-8 text-center"><a href="index.html" class="text-blue-600 hover:underline">Back to API Testing Hub</a></p>
+
+    <!-- Add New Category -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Add New Category</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /categories</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Creates a new category (admin only).</p>
+      <form id="add-category-form" class="space-y-4">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Category Name *</label>
+          <input type="text" id="name" name="name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="parent_id" class="block text-sm font-medium text-gray-700">Parent Category ID</label>
+          <input type="number" id="parent_id" name="parent_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Leave blank for top-level category">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add Category</button>
+      </form>
+      <div id="add-category-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Category by ID -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get Category by ID</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /categories/<category_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific category by its ID (public access).</p>
+      <form id="get-category-by-id-form" class="space-y-4">
+        <div>
+          <label for="category_id" class="block text-sm font-medium text-gray-700">Category ID *</label>
+          <input type="number" id="category_id" name="category_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Category</button>
+      </form>
+      <div id="get-category-by-id-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Categories by Parent -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Categories by Parent</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /categories/parent</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves categories with a specified parent ID (public access).</p>
+      <form id="get-categories-by-parent-form" class="space-y-4">
+        <div>
+          <label for="parent_id_get" class="block text-sm font-medium text-gray-700">Parent Category ID</label>
+          <input type="number" id="parent_id_get" name="parent_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Leave blank for top-level categories">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Categories</button>
+      </form>
+      <div id="get-categories-by-parent-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Update Category -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Update Category</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /categories/<category_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a specific category (admin only).</p>
+      <form id="update-category-form" class="space-y-4">
+        <div>
+          <label for="update-category-id" class="block text-sm font-medium text-gray-700">Category ID *</label>
+          <input type="number" id="update-category-id" name="category_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="update-name" class="block text-sm font-medium text-gray-700">Category Name</label>
+          <input type="text" id="update-name" name="name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="update-parent-id" class="block text-sm font-medium text-gray-700">Parent Category ID</label>
+          <input type="number" id="update-parent-id" name="parent_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Leave blank for top-level category">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Category</button>
+      </form>
+      <div id="update-category-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Delete Category -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Delete Category</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /categories/<category_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a specific category (admin only).</p>
+      <form id="delete-category-form" class="space-y-4">
+        <div>
+          <label for="delete-category-id" class="block text-sm font-medium text-gray-700">Category ID *</label>
+          <input type="number" id="delete-category-id" name="category_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Category</button>
+      </form>
+      <div id="delete-category-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get All Categories -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Get All Categories</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /categories</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all categories (public access).</p>
+      <form id="get-all-categories-form" class="space-y-4">
+        <div>
+          <label for="page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
+          <input type="number" id="page" name="page" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="per_page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
+          <input type="number" id="per_page" name="per_page" min="1" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Categories</button>
+      </form>
+      <div id="get-all-categories-response" class="mt-4 text-sm"></div>
+    </div>
+  </div>
+</body>
+</html>
