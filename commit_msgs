@@ -68,3 +68,10 @@ Feat: Add frontend interface (HTML/JS) for managing discount usages via API
 -----
 
 Add product_discounts.html and product_discounts.js to support Product Discounts API integration
+
+-----
+
+feat: add category_discounts.html and category_discounts.js for API integration
+
+- Added HTML and JS files to support category discounts features
+- Integrated front-end with category discounts API
