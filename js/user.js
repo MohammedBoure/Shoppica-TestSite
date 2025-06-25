@@ -269,3 +269,19 @@ document.getElementById('clear-all-users-form').addEventListener('submit', async
     displayResponse('clear-all-users-response', error, true);
   }
 });
+
+// Get Total Users
+document.getElementById('get-total-users-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try {
+    const response = await fetch(`${BASE_URL}/users/number`, {
+      method: 'GET',
+      credentials: 'include', // Send session cookies
+    });
+    const result = await response.json();
+    if (!response.ok) throw result;
+    displayResponse('get-total-users-response', result);
+  } catch (error) {
+    displayResponse('get-total-users-response', error, true);
+  }
+});

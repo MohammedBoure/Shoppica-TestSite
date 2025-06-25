@@ -197,6 +197,38 @@
       <div id="get-all-products-response" class="mt-4 text-sm"></div>
     </div>
 
+    <!-- Get Total Products -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">Get Total Products</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> 
+        <code class="bg-gray-200 px-2 py-1 rounded">GET /products/number</code>
+      </p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> 
+        Retrieves the total number of products in the database.
+      </p>
+      <button id="get-total-products-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+        Get Total Products
+      </button>
+      <div id="total-products-response" class="mt-4 text-sm"></div>
+    </div>
+
+
+    <!-- Low Stock Products -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">Low Stock Products</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> 
+        <code class="bg-gray-200 px-2 py-1 rounded">GET /products/low_stock</code>
+      </p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> 
+        Retrieves products that are near out-of-stock.
+      </p>
+      <button id="get-low-stock-btn" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+        Get Low Stock Products
+      </button>
+      <div id="low-stock-response" class="mt-4 text-sm text-gray-700"></div>
+    </div>
+
+
     <!-- Add Product Image -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">8. Add Product Image</h2>

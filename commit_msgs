@@ -85,3 +85,13 @@ docs(readme): update README to reflect API testing purpose and usage
 -----
 
 feat(ui): update all interfaces to match latest backend changes (2025-06-25)
+
+-----
+
+git commit -m "feat(ui): add dashboard interfaces for API data
+
+- Created UI for /products/low_stock to show critical stock alerts
+- Displayed total orders and sales from /orders/number
+- Displayed total users from /users/number
+- Displayed product count from /products/number
+- Styled dashboard cards and layout"

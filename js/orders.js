@@ -365,4 +365,29 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // 10. Get Orders Count
+  const getOrdersCountForm = document.getElementById('get-orders-count-form');
+  if (getOrdersCountForm) {
+    getOrdersCountForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(getOrdersCountForm);
+      const status = formData.get('status');
+
+      const queryParams = new URLSearchParams();
+      if (status) queryParams.append('status', status);
+
+      try {
+        const response = await fetch(`${BASE_URL}/orders/number?${queryParams.toString()}`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        const result = await response.json();
+        displayResponse('get-orders-count-response', result, !response.ok);
+      } catch (error) {
+        console.error('Error fetching orders count:', error);
+        displayResponse('get-orders-count-response', { error: 'Failed to fetch orders count' }, true);
+      }
+    });
+  }
 });

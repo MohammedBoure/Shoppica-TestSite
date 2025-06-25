@@ -208,6 +208,24 @@
       </form>
       <div id="clear-all-users-response" class="mt-4 text-sm"></div>
     </div>
+
+    <!-- Get Total Users -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">11. Get Total Users (Admin Only)</h2>
+      <p class="text-gray-600 mb-4">
+        <strong>Endpoint:</strong>
+        <code class="bg-gray-200 px-2 py-1 rounded">GET /users/number</code>
+      </p>
+      <p class="text-gray-600 mb-4">
+        <strong>Description:</strong> Returns the total number of users in the system. Requires admin privileges.
+      </p>
+      <form id="get-total-users-form" class="space-y-4">
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+          Get Total Users
+        </button>
+      </form>
+      <div id="get-total-users-response" class="mt-4 text-sm"></div>
+    </div>
   </div>
   <script src="/js/config.js"></script>
   <script src="/js/user.js"></script>

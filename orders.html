@@ -230,6 +230,22 @@
       </form>
       <div id="get-top-products-response" class="mt-4 text-sm"></div>
     </div>
+    <!-- Get Orders Count -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">10. Get Orders Count (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /orders/number</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves the total number of orders. You can optionally filter by order status (e.g., <code>completed</code>, <code>pending</code>, <code>shipped</code>). Multiple statuses can be separated by commas.</p>
+      
+      <form id="get-orders-count-form" class="space-y-4">
+        <div>
+          <label for="order-status" class="block text-sm font-medium text-gray-700">Status (optional, comma-separated)</label>
+          <input type="text" id="order-status" name="status" placeholder="e.g., completed,shipped" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Get Orders Count</button>
+      </form>
+      
+      <div id="get-orders-count-response" class="mt-4 text-sm"></div>
+    </div>
   </div>
 </body>
 </html>

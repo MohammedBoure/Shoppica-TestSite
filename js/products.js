@@ -440,6 +440,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Get Number Products
+  const getTotalProductsBtn = document.getElementById('get-total-products-btn');
+  if (getTotalProductsBtn) {
+    getTotalProductsBtn.addEventListener('click', async () => {
+      console.log('Get Total Products button clicked');
+      try {
+        const response = await fetch(`${getBackendUrl()}/products/number`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const result = await response.json();
+        if (!response.ok) throw result;
+        displayResponse('total-products-response', result);
+      } catch (error) {
+        console.error('Error fetching total products:', error);
+        displayResponse('total-products-response', error, true);
+      }
+    });
+  }
+
+
+  // Get Low Stock Products
+  const getLowStockBtn = document.getElementById('get-low-stock-btn');
+  if (getLowStockBtn) {
+    getLowStockBtn.addEventListener('click', async () => {
+      console.log('Get Low Stock Products button clicked');
+      try {
+        const response = await fetch(`${getBackendUrl()}/products/low_stock`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const result = await response.json();
+        if (!response.ok) throw result;
+        displayResponse('low-stock-response', result);
+      } catch (error) {
+        console.error('Error fetching low stock products:', error);
+        displayResponse('low-stock-response', error, true);
+      }
+    });
+  }
+
+
+
   // Get All Product Images
   const getAllProductImagesForm = document.getElementById('get-all-product-images-form');
   if (getAllProductImagesForm) {
