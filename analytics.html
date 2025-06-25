@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics API Documentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto p-6 max-w-4xl">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Analytics API Documentation</h1>
+    <p class="text-gray-600 mb-8 text-center">
+      Interact with the Analytics API endpoints hosted at 
+      <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank"></a>
+    </p>
+    <p class="text-gray-600 mb-8 text-center"><a href="index.html" class="text-blue-600 hover:underline">Back to API Testing Hub</a></p>
+
+    <!-- Top Selling Products -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Top Selling Products</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /analytics/products</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves top-selling products. Requires a valid session and admin privileges.</p>
+      <form id="top-products-form" class="space-y-4">
+        <div>
+          <label for="limit" class="block text-sm font-medium text-gray-700">Limit (1-100, default 5)</label>
+          <input type="number" id="limit" name="limit" min="1" max="100" value="5" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Products</button>
+      </form>
+      <div id="top-products-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Sales Statistics -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Sales Statistics</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /analytics/sales</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves sales statistics for a specified date range. Requires a valid session and admin privileges.</p>
+      <form id="sales-stats-form" class="space-y-4">
+        <div>
+          <label for="sales-start-date" class="block text-sm font-medium text-gray-700">Start Date (YYYY-MM-DD, optional)</label>
+          <input type="date" id="sales-start-date" name="start_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="sales-end-date" class="block text-sm font-medium text-gray-700">End Date (YYYY-MM-DD, optional)</label>
+          <input type="date" id="sales-end-date" name="end_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Sales Stats</button>
+      </form>
+      <div id="sales-stats-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- User Statistics -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. User Statistics</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /analytics/users</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves user statistics for a specified date range. Requires a valid session and admin privileges.</p>
+      <form id="user-stats-form" class="space-y-4">
+        <div>
+          <label for="user-start-date" class="block text-sm font-medium text-gray-700">Start Date (YYYY-MM-DD, optional)</label>
+          <input type="date" id="user-start-date" name="start_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="user-end-date" class="block text-sm font-medium text-gray-700">End Date (YYYY-MM-DD, optional)</label>
+          <input type="date" id="user-end-date" name="end_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch User Stats</button>
+      </form>
+      <div id="user-stats-response" class="mt-4 text-sm"></div>
+    </div>
+  </div>
+  <script src="/js/config.js"></script>
+  <script src="/js/analytics.js"></script>
+</body>
+</html>

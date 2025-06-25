@@ -95,3 +95,7 @@ git commit -m "feat(ui): add dashboard interfaces for API data
 - Displayed total users from /users/number
 - Displayed product count from /products/number
 - Styled dashboard cards and layout"
+
+-----
+
+feat(ui): add analytics dashboard for sales, users, and products endpoints

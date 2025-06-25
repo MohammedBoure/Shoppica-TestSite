@@ -25,41 +25,53 @@ document.addEventListener('DOMContentLoaded', () => {
     addProductForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       console.log('Add Product form submitted');
+
       const formData = new FormData(e.target);
-      if (!formData.get('name') || !formData.get('price') || !formData.get('stock_quantity') || !formData.get('low_stock_threshold')) {
-        displayResponse('add-product-response', { error: 'Name, price, stock quantity, and low stock threshold are required' }, true);
-        return;
-      }
+
+      // Required fields
+      const name = formData.get('name');
       const price = parseFloat(formData.get('price'));
+      const purchase_price = parseFloat(formData.get('purchase_price'));
       const stock_quantity = parseInt(formData.get('stock_quantity'));
       const low_stock_threshold = parseInt(formData.get('low_stock_threshold'));
       const category_id = formData.get('category_id') ? parseInt(formData.get('category_id')) : null;
       const is_active = parseInt(formData.get('is_active'));
-      if (isNaN(price) || isNaN(stock_quantity) || isNaN(low_stock_threshold)) {
-        displayResponse('add-product-response', { error: 'Price, stock quantity, and low stock threshold must be valid numbers' }, true);
+
+      // Check required
+      if (!name || isNaN(price) || isNaN(purchase_price) || isNaN(stock_quantity) || isNaN(low_stock_threshold)) {
+        displayResponse('add-product-response', { error: 'All required fields must be filled with valid numbers' }, true);
         return;
       }
-      if (price < 0 || stock_quantity < 0 || low_stock_threshold < 0) {
-        displayResponse('add-product-response', { error: 'Price, stock quantity, and low stock threshold must be non-negative' }, true);
+
+      // Check number values
+      if (price < 0 || purchase_price < 0 || stock_quantity < 0 || low_stock_threshold < 0) {
+        displayResponse('add-product-response', { error: 'Numbers must be non-negative' }, true);
         return;
       }
-      if (category_id && (isNaN(category_id) || category_id < 1)) {
+
+      // Check category ID if provided
+      if (category_id !== null && (isNaN(category_id) || category_id < 1)) {
         displayResponse('add-product-response', { error: 'Category ID must be a positive integer' }, true);
         return;
       }
+
+      // Check is_active
       if (![0, 1].includes(is_active)) {
         displayResponse('add-product-response', { error: 'Is active must be 0 or 1' }, true);
         return;
       }
-      if (formData.get('image') && formData.get('image').size > 0) {
-        const file = formData.get('image');
+
+      // Check image file extension if provided
+      const image = formData.get('image');
+      if (image && image.size > 0) {
         const allowedExtensions = ['jpg', 'jpeg', 'png'];
-        const extension = file.name.split('.').pop().toLowerCase();
+        const extension = image.name.split('.').pop().toLowerCase();
         if (!allowedExtensions.includes(extension)) {
-          displayResponse('add-product-response', { error: 'Invalid image file. Allowed extensions: jpg, jpeg, png' }, true);
+          displayResponse('add-product-response', { error: 'Invalid image file. Allowed: jpg, jpeg, png' }, true);
           return;
         }
       }
+
       try {
         const response = await fetch(`${getBackendUrl()}/products`, {
           method: 'POST',
@@ -75,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
 
   // Search Products
   const searchProductsForm = document.getElementById('search-products-form');
@@ -166,53 +179,76 @@ document.addEventListener('DOMContentLoaded', () => {
     updateProductForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       console.log('Update Product form submitted');
+
       const formData = new FormData(e.target);
+
       const productId = parseInt(formData.get('product_id'));
+      const name = formData.get('name');
       const price = formData.get('price') ? parseFloat(formData.get('price')) : null;
+      const purchase_price = formData.get('purchase_price') ? parseFloat(formData.get('purchase_price')) : null;
       const stock_quantity = formData.get('stock_quantity') ? parseInt(formData.get('stock_quantity')) : null;
       const low_stock_threshold = formData.get('low_stock_threshold') ? parseInt(formData.get('low_stock_threshold')) : null;
       const category_id = formData.get('category_id') ? parseInt(formData.get('category_id')) : null;
       const is_active = formData.get('is_active') ? parseInt(formData.get('is_active')) : null;
+      const image = formData.get('image');
+
+      // Validate product ID
       if (!productId || isNaN(productId) || productId < 1) {
         displayResponse('update-product-response', { error: 'Product ID must be a positive integer' }, true);
         return;
       }
-      const hasData = formData.get('name') || formData.get('description') || price !== null ||
+
+      // Check if at least one field is updated
+      const hasData = name || formData.get('description') || price !== null || purchase_price !== null ||
                       stock_quantity !== null || low_stock_threshold !== null || category_id !== null ||
-                      formData.get('image').size > 0 || is_active !== null;
+                      (image && image.size > 0) || is_active !== null;
+
       if (!hasData) {
         displayResponse('update-product-response', { error: 'At least one field must be provided' }, true);
         return;
       }
+
+      // Validate number fields
       if (price !== null && (isNaN(price) || price < 0)) {
         displayResponse('update-product-response', { error: 'Price must be a valid non-negative number' }, true);
         return;
       }
+
+      if (purchase_price !== null && (isNaN(purchase_price) || purchase_price < 0)) {
+        displayResponse('update-product-response', { error: 'Purchase price must be a valid non-negative number' }, true);
+        return;
+      }
+
       if (stock_quantity !== null && (isNaN(stock_quantity) || stock_quantity < 0)) {
-        displayResponse('update-product-response', { error: 'Stock quantity must be a valid non-negative integer' }, true);
+        displayResponse('update-product-response', { error: 'Stock quantity must be a valid non-negative number' }, true);
         return;
       }
+
       if (low_stock_threshold !== null && (isNaN(low_stock_threshold) || low_stock_threshold < 0)) {
-        displayResponse('update-product-response', { error: 'Low stock threshold must be a valid non-negative integer' }, true);
+        displayResponse('update-product-response', { error: 'Low stock threshold must be a valid non-negative number' }, true);
         return;
       }
+
       if (category_id !== null && (isNaN(category_id) || category_id < 1)) {
         displayResponse('update-product-response', { error: 'Category ID must be a positive integer' }, true);
         return;
       }
+
       if (is_active !== null && ![0, 1].includes(is_active)) {
         displayResponse('update-product-response', { error: 'Is active must be 0 or 1' }, true);
         return;
       }
-      if (formData.get('image') && formData.get('image').size > 0) {
-        const file = formData.get('image');
+
+      // Validate image file
+      if (image && image.size > 0) {
         const allowedExtensions = ['jpg', 'jpeg', 'png'];
-        const extension = file.name.split('.').pop().toLowerCase();
+        const extension = image.name.split('.').pop().toLowerCase();
         if (!allowedExtensions.includes(extension)) {
-          displayResponse('update-product-response', { error: 'Invalid image file. Allowed extensions: jpg, jpeg, png' }, true);
+          displayResponse('update-product-response', { error: 'Invalid image file. Allowed: jpg, jpeg, png' }, true);
           return;
         }
       }
+
       try {
         const response = await fetch(`${getBackendUrl()}/products/${productId}`, {
           method: 'PUT',
@@ -228,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
 
   // Delete Product
   const deleteProductForm = document.getElementById('delete-product-form');
