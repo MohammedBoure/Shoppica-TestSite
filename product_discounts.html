@@ -7,8 +7,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/product_discounts.js"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/product_discounts.js"></script>
 </head>
 <body class="bg-gray-100 font-sans">
   <div class="container mx-auto p-6 max-w-4xl">
@@ -20,7 +20,7 @@
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Add New Product Discount (Admin Only)</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /product_discounts</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Creates a new product discount (admin only).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Creates a new product discount. Requires admin privileges.</p>
       <form id="add-product-discount-form" class="space-y-4">
         <div>
           <label for="add-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
@@ -54,7 +54,7 @@
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get Product Discount by ID (Admin Only)</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /product_discounts/&lt;discount_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific product discount by its ID (admin only).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific product discount by its ID. Requires admin privileges.</p>
       <form id="get-product-discount-by-id-form" class="space-y-4">
         <div>
           <label for="get-discount-id" class="block text-sm font-medium text-gray-700">Discount ID *</label>
@@ -62,14 +62,14 @@
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Product Discount</button>
       </form>
-      <div id="get-product-discount-by-id-response" class="mt-4 text-sm"></div>
+      <div id="get-product-discount-response" class="mt-4 text-sm"></div>
     </div>
 
     <!-- Get Product Discounts by Product -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Product Discounts by Product</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /product_discounts/product/&lt;product_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all discounts for a specific product (public access).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all discounts for a specific product. Public access.</p>
       <form id="get-product-discounts-by-product-form" class="space-y-4">
         <div>
           <label for="get-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
@@ -84,7 +84,7 @@
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Get Valid Product Discounts</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /product_discounts/valid/&lt;product_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all valid discounts for a specific product (public access).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all valid discounts for a specific product. Public access.</p>
       <form id="get-valid-product-discounts-form" class="space-y-4">
         <div>
           <label for="get-valid-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
@@ -99,7 +99,7 @@
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Update Product Discount (Admin Only)</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /product_discounts/&lt;discount_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a product discount's details (admin only).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a product discount's details. Requires admin privileges.</p>
       <form id="update-product-discount-form" class="space-y-4">
         <div>
           <label for="update-discount-id" class="block text-sm font-medium text-gray-700">Discount ID *</label>
@@ -134,7 +134,7 @@
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Delete Product Discount (Admin Only)</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /product_discounts/&lt;discount_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a product discount by its ID (admin only).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a product discount by its ID. Requires admin privileges.</p>
       <form id="delete-product-discount-form" class="space-y-4">
         <div>
           <label for="delete-discount-id" class="block text-sm font-medium text-gray-700">Discount ID *</label>
@@ -148,8 +148,8 @@
     <!-- Get All Product Discounts -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Get All Product Discounts (Admin Only)</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /product_discounts</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all product discounts (admin only).</p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /product_discounts?page=&lt;page&gt;&amp;per_page=&lt;per_page&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all product discounts. Requires admin privileges.</p>
       <form id="get-all-product-discounts-form" class="space-y-4">
         <div>
           <label for="get-page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>

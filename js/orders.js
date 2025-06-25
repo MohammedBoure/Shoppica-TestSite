@@ -1,8 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Set API URL in the page
+  const apiUrlElement = document.getElementById('api-url');
+  if (apiUrlElement) {
+    apiUrlElement.textContent = BASE_URL;
+    apiUrlElement.href = BASE_URL;
+  }
+
   // Helper function to validate total price
   const validateTotalPrice = (price) => {
     const num = parseFloat(price);
     return !isNaN(num) && num >= 0;
+  };
+
+  // Helper function to validate date
+  const validateDate = (date) => {
+    return date ? !isNaN(new Date(date).getTime()) : true;
+  };
+
+  // Helper function to display response
+  const displayResponse = (elementId, data, isError = false) => {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    element.innerHTML = '';
+    element.className = `mt-4 text-sm ${isError ? 'text-red-600' : 'text-green-600'}`;
+    
+    const pre = document.createElement('pre');
+    pre.className = 'bg-gray-100 p-4 rounded-md overflow-auto';
+    const code = document.createElement('code');
+    code.className = 'language-json';
+    code.textContent = JSON.stringify(data, null, 2);
+    pre.appendChild(code);
+    element.appendChild(pre);
+    
+    Prism.highlightElement(code);
   };
 
   // 1. Add New Order
@@ -51,10 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const formData = new FormData(getOrderByIdForm);
       const orderId = formData.get('order_id');
-      const userId = formData.get('user_id');
 
-      if (!orderId || !userId) {
-        displayResponse('get-order-by-id-response', { error: 'Order ID and User ID are required' }, true);
+      if (!orderId) {
+        displayResponse('get-order-by-id-response', { error: 'Order ID is required' }, true);
         return;
       }
 
@@ -179,6 +209,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const page = formData.get('page') || 1;
       const perPage = formData.get('per_page') || 20;
 
+      if (parseInt(perPage) > 100) {
+        displayResponse('get-all-orders-response', { error: 'Per page cannot exceed 100' }, true);
+        return;
+      }
+
       try {
         const response = await fetch(`${BASE_URL}/orders?page=${page}&per_page=${perPage}`, {
           method: 'GET',
@@ -189,6 +224,144 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (error) {
         console.error('Error fetching all orders:', error);
         displayResponse('get-all-orders-response', { error: 'Failed to fetch orders' }, true);
+      }
+    });
+  }
+
+  // 7. Search Orders
+  const searchOrdersForm = document.getElementById('search-orders-form');
+  if (searchOrdersForm) {
+    searchOrdersForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(searchOrdersForm);
+      const data = Object.fromEntries(formData);
+
+      if (data.min_total && !validateTotalPrice(data.min_total)) {
+        displayResponse('search-orders-response', { error: 'Minimum total price must be a non-negative number' }, true);
+        return;
+      }
+      if (data.max_total && !validateTotalPrice(data.max_total)) {
+        displayResponse('search-orders-response', { error: 'Maximum total price must be a non-negative number' }, true);
+        return;
+      }
+      if (data.min_total && data.max_total && parseFloat(data.min_total) > parseFloat(data.max_total)) {
+        displayResponse('search-orders-response', { error: 'Minimum total cannot be greater than maximum total' }, true);
+        return;
+      }
+      if (data.start_date && !validateDate(data.start_date)) {
+        displayResponse('search-orders-response', { error: 'Invalid start date format' }, true);
+        return;
+      }
+      if (data.end_date && !validateDate(data.end_date)) {
+        displayResponse('search-orders-response', { error: 'Invalid end date format' }, true);
+        return;
+      }
+      if (data.start_date && data.end_date && new Date(data.start_date) > new Date(data.end_date)) {
+        displayResponse('search-orders-response', { error: 'Start date cannot be later than end date' }, true);
+        return;
+      }
+
+      const queryParams = new URLSearchParams();
+      if (data.search_term) queryParams.append('search_term', data.search_term);
+      if (data.status) queryParams.append('status', data.status);
+      if (data.min_total) queryParams.append('min_total', data.min_total);
+      if (data.max_total) queryParams.append('max_total', data.max_total);
+      if (data.start_date) queryParams.append('start_date', new Date(data.start_date).toISOString());
+      if (data.end_date) queryParams.append('end_date', new Date(data.end_date).toISOString());
+
+      try {
+        const response = await fetch(`${BASE_URL}/orders/search?${queryParams.toString()}`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        const result = await response.json();
+        displayResponse('search-orders-response', result, !response.ok);
+      } catch (error) {
+        console.error('Error searching orders:', error);
+        displayResponse('search-orders-response', { error: 'Failed to search orders' }, true);
+      }
+    });
+  }
+
+  // 8. Get Order Statistics
+  const getStatisticsForm = document.getElementById('get-statistics-form');
+  if (getStatisticsForm) {
+    getStatisticsForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(getStatisticsForm);
+      const data = Object.fromEntries(formData);
+
+      if (data.start_date && !validateDate(data.start_date)) {
+        displayResponse('get-statistics-response', { error: 'Invalid start date format' }, true);
+        return;
+      }
+      if (data.end_date && !validateDate(data.end_date)) {
+        displayResponse('get-statistics-response', { error: 'Invalid end date format' }, true);
+        return;
+      }
+      if (data.start_date && data.end_date && new Date(data.start_date) > new Date(data.end_date)) {
+        displayResponse('get-statistics-response', { error: 'Start date cannot be later than end date' }, true);
+        return;
+      }
+
+      const queryParams = new URLSearchParams();
+      if (data.start_date) queryParams.append('start_date', new Date(data.start_date).toISOString());
+      if (data.end_date) queryParams.append('end_date', new Date(data.end_date).toISOString());
+
+      try {
+        const response = await fetch(`${BASE_URL}/orders/statistics?${queryParams.toString()}`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        const result = await response.json();
+        displayResponse('get-statistics-response', result, !response.ok);
+      } catch (error) {
+        console.error('Error fetching statistics:', error);
+        displayResponse('get-statistics-response', { error: 'Failed to fetch statistics' }, true);
+      }
+    });
+  }
+
+  // 9. Get Top Selling Products
+  const getTopProductsForm = document.getElementById('get-top-products-form');
+  if (getTopProductsForm) {
+    getTopProductsForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(getTopProductsForm);
+      const data = Object.fromEntries(formData);
+
+      if (data.start_date && !validateDate(data.start_date)) {
+        displayResponse('get-top-products-response', { error: 'Invalid start date format' }, true);
+        return;
+      }
+      if (data.end_date && !validateDate(data.end_date)) {
+        displayResponse('get-top-products-response', { error: 'Invalid end date format' }, true);
+        return;
+      }
+      if (data.start_date && data.end_date && new Date(data.start_date) > new Date(data.end_date)) {
+        displayResponse('get-top-products-response', { error: 'Start date cannot be later than end date' }, true);
+        return;
+      }
+      if (data.limit && (parseInt(data.limit) < 1 || parseInt(data.limit) > 50)) {
+        displayResponse('get-top-products-response', { error: 'Limit must be between 1 and 50' }, true);
+        return;
+      }
+
+      const queryParams = new URLSearchParams();
+      if (data.start_date) queryParams.append('start_date', new Date(data.start_date).toISOString());
+      if (data.end_date) queryParams.append('end_date', new Date(data.end_date).toISOString());
+      if (data.limit) queryParams.append('limit', data.limit);
+
+      try {
+        const response = await fetch(`${BASE_URL}/orders/top-products?${queryParams.toString()}`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        const result = await response.json();
+        displayResponse('get-top-products-response', result, !response.ok);
+      } catch (error) {
+        console.error('Error fetching top products:', error);
+        displayResponse('get-top-products-response', { error: 'Failed to fetch top products' }, true);
       }
     });
   }

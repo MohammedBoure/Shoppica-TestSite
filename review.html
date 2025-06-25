@@ -13,22 +13,23 @@
 <body class="bg-gray-100 font-sans">
   <div class="container mx-auto p-6 max-w-4xl">
     <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Reviews API Documentation</h1>
-    <p class="text-gray-600 mb-8 text-center">Interact with the Reviews API endpoints hosted at <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank"></a></p>
+    <p class="text-gray-600 mb-4 text-center">Interact with the Reviews API endpoints hosted at <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank"></a></p>
     <p class="text-gray-600 mb-8 text-center"><a href="index.html" class="text-blue-600 hover:underline">Back to API Testing Hub</a></p>
+    <p class="text-gray-600 mb-8 text-center"><strong>Note:</strong> Endpoints marked with <span class="text-blue-600">(*)</span> require authentication. Admin-only endpoints require admin privileges.</p>
 
     <!-- Add New Review -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Add New Review</h2>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Add New Review <span class="text-blue-600">(*)</span></h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /reviews</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Creates a new review for a product (authenticated user or admin only).</p>
       <form id="add-review-form" class="space-y-4">
         <div>
           <label for="add-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
-          <input type="number" id="add-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="add-user-id" name="user_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
           <label for="add-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
-          <input type="number" id="add-product-id" name="product_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="add-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
           <label for="add-rating" class="block text-sm font-medium text-gray-700">Rating (1-5) *</label>
@@ -40,52 +41,48 @@
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add Review</button>
       </form>
-      <pre id="add-review-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+      <pre id="add-review-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
     </div>
 
     <!-- Get Review by ID -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get Review by ID</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /reviews/<review_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /reviews/&lt;review_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific review by its ID (public access).</p>
       <form id="get-review-by-id-form" class="space-y-4">
         <div>
           <label for="get-review-id" class="block text-sm font-medium text-gray-700">Review ID *</label>
-          <input type="number" id="get-review-id" name="review_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="get-review-id" name="review_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Review</button>
       </form>
-      <pre id="get-review-by-id-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+      <pre id="get-review-by-id-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
     </div>
 
     <!-- Get Reviews by Product -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Reviews by Product</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /reviews/product/<product_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /reviews/product/&lt;product_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all reviews for a specific product (public access).</p>
       <form id="get-reviews-by-product-form" class="space-y-4">
         <div>
           <label for="get-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
-          <input type="number" id="get-product-id" name="product_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="get-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Reviews</button>
       </form>
-      <pre id="get-reviews-by-product-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+      <pre id="get-reviews-by-product-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
     </div>
 
     <!-- Update Review -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Update Review</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /reviews/<review_id></code></p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Update Review <span class="text-blue-600">(*)</span></h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /reviews/&lt;review_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a specific review (review owner or admin only).</p>
       <form id="update-review-form" class="space-y-4">
         <div>
           <label for="update-review-id" class="block text-sm font-medium text-gray-700">Review ID *</label>
-          <input type="number" id="update-review-id" name="review_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-        </div>
-        <div>
-          <label for="update-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
-          <input type="number" id="update-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="update-review-id" name="review_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
           <label for="update-rating" class="block text-sm font-medium text-gray-700">Rating (1-5)</label>
@@ -97,31 +94,27 @@
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Review</button>
       </form>
-      <pre id="update-review-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+      <pre id="update-review-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
     </div>
 
     <!-- Delete Review -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Delete Review</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /reviews/<review_id></code></p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Delete Review <span class="text-blue-600">(*)</span></h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /reviews/&lt;review_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a specific review (review owner or admin only).</p>
       <form id="delete-review-form" class="space-y-4">
         <div>
           <label for="delete-review-id" class="block text-sm font-medium text-gray-700">Review ID *</label>
-          <input type="number" id="delete-review-id" name="review_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-        </div>
-        <div>
-          <label for="delete-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
-          <input type="number" id="delete-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="delete-review-id" name="review_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Review</button>
       </form>
-      <pre id="delete-review-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+      <pre id="delete-review-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
     </div>
 
     <!-- Get All Reviews (Admin Only) -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Get All Reviews (Admin Only)</h2>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Get All Reviews <span class="text-blue-600">(* Admin)</span></h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /reviews</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all reviews (admin only).</p>
       <form id="get-all-reviews-form" class="space-y-4">
@@ -135,7 +128,128 @@
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Reviews</button>
       </form>
-      <pre id="get-all-reviews-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto max-h-96"><code class="language-json"></code></pre>
+      <pre id="get-all-reviews-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
+    </div>
+
+    <!-- Search Reviews -->
+    <!-- Search Reviews -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Search Reviews</h2>
+      <p class="text-gray-600 mb-4">
+        <strong>Endpoint:</strong>
+        <code class="bg-gray-200 px-2 py-1 rounded">GET /reviews/search</code>
+      </p>
+      <p class="text-gray-600 mb-4">
+        <strong>Description:</strong>
+        Searches reviews by product ID, user ID, rating range, or comment keyword with pagination (public access).
+      </p>
+
+      <form id="search-reviews-form" class="space-y-4">
+        <div>
+          <label for="search-product-id" class="block text-sm font-medium text-gray-700">Product ID</label>
+          <input type="number" id="search-product-id" name="product_id" min="1"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+
+        <div>
+          <label for="search-user-id" class="block text-sm font-medium text-gray-700">User ID</label>
+          <input type="number" id="search-user-id" name="user_id" min="1"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+
+        <div>
+          <label for="search-min-rating" class="block text-sm font-medium text-gray-700">Min Rating (1–5)</label>
+          <input type="number" id="search-min-rating" name="min_rating" min="1" max="5"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+
+        <div>
+          <label for="search-max-rating" class="block text-sm font-medium text-gray-700">Max Rating (1–5)</label>
+          <input type="number" id="search-max-rating" name="max_rating" min="1" max="5"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+
+        <div>
+          <label for="search-comment" class="block text-sm font-medium text-gray-700">Comment Keyword</label>
+          <input type="text" id="search-comment" name="comment" placeholder="e.g., good, bad, excellent"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+
+        <div>
+          <label for="search-page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
+          <input type="number" id="search-page" name="page" min="1" value="1"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+
+        <div>
+          <label for="search-per-page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
+          <input type="number" id="search-per-page" name="per_page" min="1" value="20"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+
+        <button type="submit"
+          class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Search Reviews</button>
+      </form>
+
+      <pre id="search-reviews-response"
+        class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
+    </div>
+
+
+    <!-- Delete Reviews by Product -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">8. Delete Reviews by Product <span class="text-blue-600">(* Admin)</span></h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /reviews/by-product/&lt;product_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes all reviews for a specific product (admin only).</p>
+      <form id="delete-reviews-by-product-form" class="space-y-4">
+        <div>
+          <label for="delete-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
+          <input type="number" id="delete-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Reviews</button>
+      </form>
+      <pre id="delete-reviews-by-product-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
+    </div>
+
+    <!-- Delete Reviews by User -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">9. Delete Reviews by User <span class="text-blue-600">(* Admin)</span></h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /reviews/by-user/&lt;user_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes all reviews by a specific user (admin only).</p>
+      <form id="delete-reviews-by-user-form" class="space-y-4">
+        <div>
+          <label for="delete-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
+          <input type="number" id="delete-user-id" name="user_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Reviews</button>
+      </form>
+      <pre id="delete-reviews-by-user-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
+    </div>
+
+    <!-- Get Product Review Stats -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">10. Get Product Review Stats</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /reviews/stats/product/&lt;product_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves review statistics for a specific product (public access).</p>
+      <form id="get-product-review-stats-form" class="space-y-4">
+        <div>
+          <label for="stats-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
+          <input type="number" id="stats-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Stats</button>
+      </form>
+      <pre id="get-product-review-stats-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
+    </div>
+
+    <!-- Get Overall Review Stats -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">11. Get Overall Review Stats <span class="text-blue-600">(* Admin)</span></h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /reviews/stats/overall</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves overall review statistics for all products (admin only).</p>
+      <form id="get-overall-review-stats-form" class="space-y-4">
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Stats</button>
+      </form>
+      <pre id="get-overall-review-stats-response" class="mt-4 text-sm border border-gray-300 rounded-md overflow-auto"><code class="language-json"></code></pre>
     </div>
   </div>
 </body>

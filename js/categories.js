@@ -1,8 +1,27 @@
 console.log('categories.js loaded');
 
+function displayResponse(elementId, data, isError = false) {
+  const responseDiv = document.getElementById(elementId);
+  if (!responseDiv) return;
+
+  responseDiv.innerHTML = '';
+  responseDiv.className = `mt-4 text-sm ${isError ? 'text-red-600' : 'text-green-600'}`;
+
+  if (isError) {
+    responseDiv.textContent = data.error || 'An unexpected error occurred';
+  } else {
+    const pre = document.createElement('pre');
+    pre.className = 'bg-gray-100 p-4 rounded-md overflow-auto';
+    pre.textContent = JSON.stringify(data, null, 2);
+    responseDiv.appendChild(pre);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOMContentLoaded event fired');
   const BASE_URL = getBackendUrl();
+  document.getElementById('api-url').textContent = BASE_URL;
+  document.getElementById('api-url').href = BASE_URL;
 
   // Add New Category
   const addCategoryForm = document.getElementById('add-category-form');
@@ -11,25 +30,26 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       console.log('Add Category form submitted');
       const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData);
-      if (!data.name) {
+      if (!formData.get('name')) {
         displayResponse('add-category-response', { error: 'Category name is required' }, true);
         return;
       }
-      if (data.parent_id === '') {
-        data.parent_id = null;
-      } else if (data.parent_id) {
-        data.parent_id = parseInt(data.parent_id);
+      if (formData.get('parent_id') === '') {
+        formData.delete('parent_id'); // Backend will handle null
       }
       try {
         const response = await fetch(`${BASE_URL}/categories`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+          body: formData,
           credentials: 'include',
         });
         const result = await response.json();
-        if (!response.ok) throw result;
+        if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+            throw { error: 'Authentication required or insufficient permissions (admin only)' };
+          }
+          throw result;
+        }
         displayResponse('add-category-response', result);
       } catch (error) {
         console.error('Error adding category:', error);
@@ -93,26 +113,26 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Update Category form submitted');
       const formData = new FormData(e.target);
       const categoryId = formData.get('category_id');
-      const data = {};
-      if (formData.get('name')) data.name = formData.get('name');
-      if (formData.get('parent_id') === '') {
-        data.parent_id = null;
-      } else if (formData.get('parent_id')) {
-        data.parent_id = parseInt(formData.get('parent_id'));
-      }
-      if (Object.keys(data).length === 0) {
+      if (!formData.get('name') && !formData.get('parent_id') && !formData.get('image') && !formData.get('image_url')) {
         displayResponse('update-category-response', { error: 'At least one field must be provided' }, true);
         return;
+      }
+      if (formData.get('parent_id') === '') {
+        formData.delete('parent_id'); // Backend will handle null
       }
       try {
         const response = await fetch(`${BASE_URL}/categories/${categoryId}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+          body: formData,
           credentials: 'include',
         });
         const result = await response.json();
-        if (!response.ok) throw result;
+        if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+            throw { error: 'Authentication required or insufficient permissions (admin only)' };
+          }
+          throw result;
+        }
         displayResponse('update-category-response', result);
       } catch (error) {
         console.error('Error updating category:', error);
@@ -135,7 +155,12 @@ document.addEventListener('DOMContentLoaded', () => {
           credentials: 'include',
         });
         const result = await response.json();
-        if (!response.ok) throw result;
+        if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+            throw { error: 'Authentication required or insufficient permissions (admin only)' };
+          }
+          throw result;
+        }
         displayResponse('delete-category-response', result);
       } catch (error) {
         console.error('Error deleting category:', error);
@@ -163,6 +188,34 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (error) {
         console.error('Error fetching all categories:', error);
         displayResponse('get-all-categories-response', error, true);
+      }
+    });
+  }
+
+  // Search Categories
+  const searchCategoriesForm = document.getElementById('search-categories-form');
+  if (searchCategoriesForm) {
+    searchCategoriesForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('Search Categories form submitted');
+      const formData = new FormData(e.target);
+      const searchTerm = formData.get('search_term');
+      const page = formData.get('page') || 1;
+      const perPage = formData.get('per_page') || 20;
+      if (!searchTerm) {
+        displayResponse('search-categories-response', { error: 'Search term is required' }, true);
+        return;
+      }
+      try {
+        const response = await fetch(`${BASE_URL}/categories/search?search_term=${encodeURIComponent(searchTerm)}&page=${page}&per_page=${perPage}`, {
+          method: 'GET',
+        });
+        const result = await response.json();
+        if (!response.ok) throw result;
+        displayResponse('search-categories-response', result);
+      } catch (error) {
+        console.error('Error searching categories:', error);
+        displayResponse('search-categories-response', error, true);
       }
     });
   }

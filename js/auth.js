@@ -1,3 +1,20 @@
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+function displayResponse(elementId, data, isError = false) {
+  const responseDiv = document.getElementById(elementId);
+  responseDiv.innerHTML = '';
+  responseDiv.className = `mt-4 text-sm ${isError ? 'text-red-600' : 'text-green-600'}`;
+  const pre = document.createElement('pre');
+  pre.textContent = JSON.stringify(data, null, 2);
+  responseDiv.appendChild(pre);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Set API URL in the HTML
+  const apiUrlElement = document.getElementById('api-url');
+  apiUrlElement.href = BASE_URL;
+  apiUrlElement.textContent = BASE_URL;
+});
 
 // Login
 document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -5,14 +22,22 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
   const formData = new FormData(e.target);
   const data = Object.fromEntries(formData);
 
+  // Client-side validation
   if (!data.email || !data.password) {
     displayResponse('login-response', { error: 'Email and password are required' }, true);
-    localStorage.setItem('user_id', result.user.id);
+    return;
+  }
+  if (!emailRegex.test(data.email)) {
+    displayResponse('login-response', { error: 'Invalid email format' }, true);
+    return;
+  }
+  if (data.password.length < 4) {
+    displayResponse('login-response', { error: 'Password must be at least 4 characters long' }, true);
     return;
   }
 
   try {
-    const response = await fetch(`${BASE_URL}/login`, {
+    const response = await fetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -29,7 +54,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 // Get Current User
 document.getElementById('get-user-btn').addEventListener('click', async () => {
   try {
-    const response = await fetch(`${BASE_URL}/me`, {
+    const response = await fetch(`${BASE_URL}/auth/me`, {
       method: 'GET',
       credentials: 'include',
     });
@@ -44,7 +69,7 @@ document.getElementById('get-user-btn').addEventListener('click', async () => {
 // Logout
 document.getElementById('logout-btn').addEventListener('click', async () => {
   try {
-    const response = await fetch(`${BASE_URL}/logout`, {
+    const response = await fetch(`${BASE_URL}/auth/logout`, {
       method: 'POST',
       credentials: 'include',
     });

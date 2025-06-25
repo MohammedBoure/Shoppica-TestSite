@@ -1,4 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Set API URL in the page
+  const apiUrlElement = document.getElementById('api-url');
+  apiUrlElement.textContent = BASE_URL;
+  apiUrlElement.href = BASE_URL;
+
+  // Helper function to display response
+  const displayResponse = (elementId, data, isError) => {
+    const responseElement = document.getElementById(elementId);
+    responseElement.innerHTML = `<pre class="language-json"><code>${JSON.stringify(data, null, 2)}</code></pre>`;
+    responseElement.className = `mt-4 text-sm ${isError ? 'text-red-600' : 'text-green-600'}`;
+    Prism.highlightAll();
+  };
+
   // Helper function to validate quantity
   const validateQuantity = (quantity) => {
     const num = parseInt(quantity);
@@ -50,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResponse('add-order-item-response', result, !response.ok);
       } catch (error) {
         console.error('Error adding order item:', error);
-        displayResponse('add-order-item-response', { error: 'Failed to add order item' }, true);
+        displayResponse('add-order-item-response', { error: 'Failed to add order item. Ensure you are logged in as an admin.' }, true);
       }
     });
   }
@@ -62,10 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const formData = new FormData(getOrderItemByIdForm);
       const orderItemId = formData.get('order_item_id');
-      const userId = formData.get('user_id');
 
-      if (!orderItemId || !userId) {
-        displayResponse('get-order-item-by-id-response', { error: 'Order Item ID and User ID are required' }, true);
+      if (!orderItemId) {
+        displayResponse('get-order-item-by-id-response', { error: 'Order Item ID is required' }, true);
         return;
       }
 
@@ -78,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResponse('get-order-item-by-id-response', result, !response.ok);
       } catch (error) {
         console.error('Error fetching order item:', error);
-        displayResponse('get-order-item-by-id-response', { error: 'Failed to fetch order item' }, true);
+        displayResponse('get-order-item-by-id-response', { error: 'Failed to fetch order item. Ensure you are logged in.' }, true);
       }
     });
   }
@@ -90,10 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const formData = new FormData(getOrderItemsByOrderForm);
       const orderId = formData.get('order_id');
-      const userId = formData.get('user_id');
 
-      if (!orderId || !userId) {
-        displayResponse('get-order-items-by-order-response', { error: 'Order ID and User ID are required' }, true);
+      if (!orderId) {
+        displayResponse('get-order-items-by-order-response', { error: 'Order ID is required' }, true);
         return;
       }
 
@@ -106,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResponse('get-order-items-by-order-response', result, !response.ok);
       } catch (error) {
         console.error('Error fetching order items by order:', error);
-        displayResponse('get-order-items-by-order-response', { error: 'Failed to fetch order items' }, true);
+        displayResponse('get-order-items-by-order-response', { error: 'Failed to fetch order items. Ensure you are logged in.' }, true);
       }
     });
   }
@@ -154,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResponse('update-order-item-response', result, !response.ok);
       } catch (error) {
         console.error('Error updating order item:', error);
-        displayResponse('update-order-item-response', { error: 'Failed to update order item' }, true);
+        displayResponse('update-order-item-response', { error: 'Failed to update order item. Ensure you are logged in as an admin.' }, true);
       }
     });
   }
@@ -181,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResponse('delete-order-item-response', result, !response.ok);
       } catch (error) {
         console.error('Error deleting order item:', error);
-        displayResponse('delete-order-item-response', { error: 'Failed to delete order item' }, true);
+        displayResponse('delete-order-item-response', { error: 'Failed to delete order item. Ensure you are logged in as an admin.' }, true);
       }
     });
   }
@@ -204,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResponse('get-all-order-items-response', result, !response.ok);
       } catch (error) {
         console.error('Error fetching all order items:', error);
-        displayResponse('get-all-order-items-response', { error: 'Failed to fetch order items' }, true);
+        displayResponse('get-all-order-items-response', { error: 'Failed to fetch order items. Ensure you are logged in as an admin.' }, true);
       }
     });
   }

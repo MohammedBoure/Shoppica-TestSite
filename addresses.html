@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,15 +19,11 @@
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Add New Address</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /addresses</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Adds a new address for the authenticated user.</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Adds a new address for the authenticated user. Requires authentication.</p>
       <form id="add-address-form" class="space-y-4">
         <div>
-          <label for="address_line1" class="block text-sm font-medium text-gray-700">Address Line 1 *</label>
-          <input type="text" id="address_line1" name="address_line1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-        </div>
-        <div>
-          <label for="address_line2" class="block text-sm font-medium text-gray-700">Address Line 2</label>
-          <input type="text" id="address_line2" name="address_line2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+          <label for="address_line" class="block text-sm font-medium text-gray-700">Address Line *</label>
+          <input type="text" id="address_line" name="address_line" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
           <label for="city" class="block text-sm font-medium text-gray-700">City *</label>
@@ -41,10 +38,6 @@
           <input type="text" id="postal_code" name="postal_code" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
-          <label for="country" class="block text-sm font-medium text-gray-700">Country *</label>
-          <input type="text" id="country" name="country" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-        </div>
-        <div>
           <label for="is_default" class="block text-sm font-medium text-gray-700">Is Default</label>
           <input type="checkbox" id="is_default" name="is_default" class="mt-1">
         </div>
@@ -57,16 +50,25 @@
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get User's Addresses</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /addresses/me</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all addresses for the authenticated user.</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all addresses for the authenticated user. Requires authentication.</p>
       <button id="get-user-addresses-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Addresses</button>
       <div id="get-user-addresses-response" class="mt-4 text-sm"></div>
     </div>
 
+    <!-- Get Default Address -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Default Address</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /addresses/me/default</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves the default address for the authenticated user. Requires authentication.</p>
+      <button id="get-default-address-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Default Address</button>
+      <div id="get-default-address-response" class="mt-4 text-sm"></div>
+    </div>
+
     <!-- Get Address by ID -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Address by ID</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /addresses/&lt;address_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific address by its ID (user must own it or be admin).</p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Get Address by ID</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /addresses/<address_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific address by its ID (user must own it or be admin). Requires authentication.</p>
       <form id="get-address-by-id-form" class="space-y-4">
         <div>
           <label for="address_id" class="block text-sm font-medium text-gray-700">Address ID *</label>
@@ -79,21 +81,17 @@
 
     <!-- Update Address -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Update Address</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /addresses/&lt;address_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a specific address (user must own it or be admin).</p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Update Address</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /addresses/<address_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a specific address (user must own it or be admin). Requires authentication.</p>
       <form id="update-address-form" class="space-y-4">
         <div>
           <label for="update-address-id" class="block text-sm font-medium text-gray-700">Address ID *</label>
           <input type="number" id="update-address-id" name="address_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
-          <label for="update-address-line1" class="block text-sm font-medium text-gray-700">Address Line 1</label>
-          <input type="text" id="update-address-line1" name="address_line1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-        </div>
-        <div>
-          <label for="update-address-line2" class="block text-sm font-medium text-gray-700">Address Line 2</label>
-          <input type="text" id="update-address-line2" name="address_line2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+          <label for="update-address-line" class="block text-sm font-medium text-gray-700">Address Line</label>
+          <input type="text" id="update-address-line" name="address_line" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
           <label for="update-city" class="block text-sm font-medium text-gray-700">City</label>
@@ -108,10 +106,6 @@
           <input type="text" id="update-postal-code" name="postal_code" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
-          <label for="update-country" class="block text-sm font-medium text-gray-700">Country</label>
-          <input type="text" id="update-country" name="country" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-        </div>
-        <div>
           <label for="update-is-default" class="block text-sm font-medium text-gray-700">Is Default</label>
           <input type="checkbox" id="update-is-default" name="is_default" class="mt-1">
         </div>
@@ -122,9 +116,9 @@
 
     <!-- Delete Address -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Delete Address</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /addresses/&lt;address_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a specific address (user must own it or be admin).</p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Delete Address</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /addresses/<address_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a specific address (user must own it or be admin). Requires authentication.</p>
       <form id="delete-address-form" class="space-y-4">
         <div>
           <label for="delete-address-id" class="block text-sm font-medium text-gray-700">Address ID *</label>
@@ -135,11 +129,20 @@
       <div id="delete-address-response" class="mt-4 text-sm"></div>
     </div>
 
+    <!-- Get User Address Stats -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Get User Address Stats</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /addresses/me/stats</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves address statistics for the authenticated user. Requires authentication.</p>
+      <button id="get-user-stats-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Stats</button>
+      <div id="get-user-stats-response" class="mt-4 text-sm"></div>
+    </div>
+
     <!-- Get Addresses by User (Admin Only) -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Get Addresses by User (Admin Only)</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /admin/addresses/user/&lt;user_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all addresses for a specific user (admin only).</p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">8. Get Addresses by User (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /admin/addresses/user/<user_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all addresses for a specific user (admin only). Requires admin authentication.</p>
       <form id="get-addresses-by-user-form" class="space-y-4">
         <div>
           <label for="user_id" class="block text-sm font-medium text-gray-700">User ID *</label>
@@ -150,12 +153,50 @@
       <div id="get-addresses-by-user-response" class="mt-4 text-sm"></div>
     </div>
 
+    <!-- Delete Addresses by User (Admin Only) -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">9. Delete Addresses by User (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /admin/addresses/user/<user_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes all addresses for a specific user (admin only). Requires admin authentication.</p>
+      <form id="delete-addresses-by-user-form" class="space-y-4">
+        <div>
+          <label for="delete-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
+          <input type="number" id="delete-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Addresses</button>
+      </form>
+      <div id="delete-addresses-by-user-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Search Addresses (Admin Only) -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">10. Search Addresses (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /admin/addresses/search</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Searches addresses using a single query word across multiple fields (admin only). Requires admin authentication.</p>
+      <form id="search-addresses-form" class="space-y-4">
+        <div>
+          <label for="search-query" class="block text-sm font-medium text-gray-700">Search Query *</label>
+          <input type="text" id="search-query" name="q" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="search-page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
+          <input type="number" id="search-page" name="page" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="search-per-page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
+          <input type="number" id="search-per-page" name="per_page" min="1" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Search Addresses</button>
+      </form>
+      <div id="search-addresses-response" class="mt-4 text-sm"></div>
+    </div>
+
     <!-- Get All Addresses (Admin Only) -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Get All Addresses (Admin Only)</h2>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">11. Get All Addresses (Admin Only)</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /admin/addresses</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all addresses (admin only).</p>
-      <form id="get-all-addresses-form" class="space-y-4">
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all addresses (admin only). Requires admin authentication.</p>
+      <form id="get-all-addresses" class="space-y-4">
         <div>
           <label for="page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
           <input type="number" id="page" name="page" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
@@ -168,6 +209,31 @@
       </form>
       <div id="get-all-addresses-response" class="mt-4 text-sm"></div>
     </div>
+
+    <!-- Get Overall Address Stats (Admin Only) -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">12. Get Overall Address Stats (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /admin/addresses/stats</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves overall address statistics (admin only). Requires admin authentication.</p>
+      <button id="get-overall-stats-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Stats</button>
+      <div id="get-overall-stats-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get User Address Stats (Admin Only) -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">13. Get User Address Stats (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /admin/addresses/user/<user_id>/stats</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves address statistics for a specific user (admin only). Requires admin authentication.</p>
+      <form id="get-user-address-stats-form" class="space-y-4">
+        <div>
+          <label for="stats-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
+          <input type="number" id="stats-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Stats</button>
+      </form>
+      <div id="get-user-address-stats-response" class="mt-4 text-sm"></div>
+    </div>
   </div>
 </body>
 </html>
+```

@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Set API URL display
+  const apiLink = document.getElementById('api-url');
+  if (apiLink) {
+    apiLink.href = BASE_URL;
+    apiLink.textContent = BASE_URL;
+  }
+
   // Helper function to validate positive integer
   const validatePositiveInteger = (id) => {
     const value = parseInt(id);
@@ -8,13 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Helper function to validate discount percent
   const validateDiscountPercent = (percent) => {
     const num = parseFloat(percent);
-    return !isNaN(num) && num >= 0 && num <= 100;
+    return !isNaN(num) && num > 0;
   };
 
   // Helper function to convert datetime-local to ISO 8601
   const toISO8601 = (datetime) => {
     if (!datetime) return null;
-    return new Date(datetime).toISOString();
+    const date = new Date(datetime);
+    return date.toISOString().replace('.000Z', 'Z');
   };
 
   // Helper function to validate date range
@@ -42,12 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (!validateDiscountPercent(data.discount_percent)) {
-        displayResponse('add-category-discount-response', { error: 'Discount percent must be between 0 and 100' }, true);
+        displayResponse('add-category-discount-response', { error: 'Discount percent must be a positive number' }, true);
         return;
       }
 
       if (!validateDateRange(data.starts_at, data.ends_at)) {
-        displayResponse('add-category-discount-response', { error: 'starts_at must be before ends_at' }, true);
+        displayResponse('add-category-discount-response', { error: 'Start date must be before end date' }, true);
         return;
       }
 
@@ -55,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const body = {
           category_id: parseInt(data.category_id),
           discount_percent: parseFloat(data.discount_percent),
-          is_active: data.is_active === 'true'
+          is_active: parseInt(data.is_active)
         };
         if (data.starts_at) body.starts_at = toISO8601(data.starts_at);
         if (data.ends_at) body.ends_at = toISO8601(data.ends_at);
@@ -93,27 +101,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if (data.category_id && !validatePositiveInteger(data.category_id)) {
-        displayResponse('update-category-discount-response', { error: 'Category ID must be a positive integer' }, true);
-        return;
-      }
-
       if (data.discount_percent && !validateDiscountPercent(data.discount_percent)) {
-        displayResponse('update-category-discount-response', { error: 'Discount percent must be between 0 and 100' }, true);
+        displayResponse('update-category-discount-response', { error: 'Discount percent must be a positive number' }, true);
         return;
       }
 
       if (!validateDateRange(data.starts_at, data.ends_at)) {
-        displayResponse('update-category-discount-response', { error: 'starts_at must be before ends_at' }, true);
+        displayResponse('update-category-discount-response', { error: 'Start date must be before end date' }, true);
         return;
       }
 
       const body = {};
-      if (data.category_id) body.category_id = parseInt(data.category_id);
       if (data.discount_percent) body.discount_percent = parseFloat(data.discount_percent);
       if (data.starts_at) body.starts_at = toISO8601(data.starts_at);
       if (data.ends_at) body.ends_at = toISO8601(data.ends_at);
-      if (data.is_active !== '') body.is_active = data.is_active === 'true';
+      if (data.is_active !== '') body.is_active = parseInt(data.is_active);
 
       if (Object.keys(body).length === 0) {
         displayResponse('update-category-discount-response', { error: 'At least one field must be provided' }, true);
@@ -189,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const response = await fetch(`${BASE_URL}/category_discounts/category/${categoryId}`, {
           method: 'GET'
-          // No credentials needed for public access
         });
         const result = await response.json();
         displayResponse('get-discounts-by-category-response', result, !response.ok);
@@ -221,7 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const response = await fetch(`${BASE_URL}/category_discounts/valid/${categoryId}`, {
           method: 'GET'
-          // No credentials needed for public access
         });
         const result = await response.json();
         displayResponse('get-valid-category-discounts-response', result, !response.ok);
@@ -270,8 +270,13 @@ document.addEventListener('DOMContentLoaded', () => {
     getAllCategoryDiscountsForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(getAllCategoryDiscountsForm);
-      const page = formData.get('page') || 1;
-      const perPage = formData.get('per_page') || 20;
+      const page = parseInt(formData.get('page')) || 1;
+      const perPage = parseInt(formData.get('per_page')) || 20;
+
+      if (!validatePositiveInteger(page) || !validatePositiveInteger(perPage)) {
+        displayResponse('get-all-category-discounts-response', { error: 'Page and per_page must be positive integers' }, true);
+        return;
+      }
 
       try {
         const response = await fetch(`${BASE_URL}/category_discounts?page=${page}&per_page=${perPage}`, {
@@ -287,3 +292,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+

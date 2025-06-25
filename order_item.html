@@ -46,16 +46,12 @@
     <!-- Get Order Item by ID -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get Order Item by ID</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /order_items/<order_item_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /order_items/&lt;order_item_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific order item by its ID (order owner or admin only).</p>
       <form id="get-order-item-by-id-form" class="space-y-4">
         <div>
           <label for="get-order-item-id" class="block text-sm font-medium text-gray-700">Order Item ID *</label>
           <input type="number" id="get-order-item-id" name="order_item_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-        </div>
-        <div>
-          <label for="get-order-item-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
-          <input type="number" id="get-order-item-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Order Item</button>
       </form>
@@ -65,16 +61,12 @@
     <!-- Get Order Items by Order -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Order Items by Order</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /order_items/order/<order_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /order_items/order/&lt;order_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all order items for a specific order (order owner or admin only).</p>
       <form id="get-order-items-by-order-form" class="space-y-4">
         <div>
           <label for="get-order-id" class="block text-sm font-medium text-gray-700">Order ID *</label>
           <input type="number" id="get-order-id" name="order_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-        </div>
-        <div>
-          <label for="get-order-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
-          <input type="number" id="get-order-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Order Items</button>
       </form>
@@ -84,7 +76,7 @@
     <!-- Update Order Item -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Update Order Item (Admin Only)</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /order_items/<order_item_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /order_items/&lt;order_item_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates an order item's details (admin only).</p>
       <form id="update-order-item-form" class="space-y-4">
         <div>
@@ -107,7 +99,7 @@
     <!-- Delete Order Item -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Delete Order Item (Admin Only)</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /order_items/<order_item_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /order_items/&lt;order_item_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes an order item by its ID (admin only).</p>
       <form id="delete-order-item-form" class="space-y-4">
         <div>

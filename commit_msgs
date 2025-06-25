@@ -82,3 +82,6 @@ style(ui): enhance API response display and unify response layout
 -----
 
 docs(readme): update README to reflect API testing purpose and usage
+-----
+
+feat(ui): update all interfaces to match latest backend changes (2025-06-25)

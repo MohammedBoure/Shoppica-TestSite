@@ -18,7 +18,7 @@
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Add New Product</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /products</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Creates a new product with an optional image upload (admin only).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Creates a new product with an optional image file (admin only).</p>
       <form id="add-product-form" class="space-y-4" enctype="multipart/form-data">
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">Product Name *</label>
@@ -33,16 +33,20 @@
           <input type="number" id="stock_quantity" name="stock_quantity" min="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
+          <label for="low_stock_threshold" class="block text-sm font-medium text-gray-700">Low Stock Threshold (default: 5) *</label>
+          <input type="number" id="low_stock_threshold" name="low_stock_threshold" min="0" value="5" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
           <label for="category_id" class="block text-sm font-medium text-gray-700">Category ID</label>
-          <input type="number" id="category_id" name="category_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+          <input type="number" id="category_id" name="category_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
           <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
           <textarea id="description" name="description" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
         </div>
         <div>
-          <label for="image" class="block text-sm font-medium text-gray-700">Product Image (jpg, jpeg, png, gif)</label>
-          <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/gif" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+          <label for="image" class="block text-sm font-medium text-gray-700">Product Image (jpg, jpeg, png)</label>
+          <input type="file" id="image" name="image" accept="image/jpeg,image/png" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
         </div>
         <div>
           <label for="is_active" class="block text-sm font-medium text-gray-700">Is Active</label>
@@ -56,15 +60,38 @@
       <div id="add-product-response" class="mt-4 text-sm"></div>
     </div>
 
+    <!-- Search Products -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Search Products</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /products/search</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Searches active products by name with pagination (public access).</p>
+      <form id="search-products-form" class="space-y-4">
+        <div>
+          <label for="search_term" class="block text-sm font-medium text-gray-700">Search Term *</label>
+          <input type="text" id="search_term" name="search_term" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="search_page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
+          <input type="number" id="search_page" name="page" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="search_per_page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
+          <input type="number" id="search_per_page" name="per_page" min="1" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Search Products</button>
+      </form>
+      <div id="search-products-response" class="mt-4 text-sm"></div>
+    </div>
+
     <!-- Get Product by ID -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get Product by ID</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /products/&lt;product_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific product by its ID, including images (public access).</p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Product by ID</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /products/<product_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific active product by its ID, including images (public access).</p>
       <form id="get-product-by-id-form" class="space-y-4">
         <div>
           <label for="product_id" class="block text-sm font-medium text-gray-700">Product ID *</label>
-          <input type="number" id="product_id" name="product_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="product_id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Product</button>
       </form>
@@ -73,13 +100,13 @@
 
     <!-- Get Products by Category -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Products by Category</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /products/category/&lt;category_id&gt;</code></p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Get Products by Category</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /products/category/<category_id></code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all active products for a specific category, including images (public access).</p>
       <form id="get-products-by-category-form" class="space-y-4">
         <div>
           <label for="category_id_get" class="block text-sm font-medium text-gray-700">Category ID *</label>
-          <input type="number" id="category_id_get" name="category_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="category_id_get" name="category_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Products</button>
       </form>
@@ -88,13 +115,13 @@
 
     <!-- Update Product -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Update Product</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /products/&lt;product_id&gt;</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a specific product with an optional image upload (admin only).</p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Update Product</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /products/<product_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a specific product with an optional image file (admin only).</p>
       <form id="update-product-form" class="space-y-4" enctype="multipart/form-data">
         <div>
           <label for="update-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
-          <input type="number" id="update-product-id" name="product_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="update-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
           <label for="update-name" class="block text-sm font-medium text-gray-700">Product Name</label>
@@ -109,16 +136,20 @@
           <input type="number" id="update-stock-quantity" name="stock_quantity" min="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
+          <label for="update-low-stock-threshold" class="block text-sm font-medium text-gray-700">Low Stock Threshold</label>
+          <input type="number" id="update-low-stock-threshold" name="low_stock_threshold" min="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
           <label for="update-category-id" class="block text-sm font-medium text-gray-700">Category ID</label>
-          <input type="number" id="update-category-id" name="category_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+          <input type="number" id="update-category-id" name="category_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
           <label for="update-description" class="block text-sm font-medium text-gray-700">Description</label>
           <textarea id="update-description" name="description" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
         </div>
         <div>
-          <label for="update-image" class="block text-sm font-medium text-gray-700">Product Image (jpg, jpeg, png, gif)</label>
-          <input type="file" id="update-image" name="image" accept="image/jpeg,image/png,image/gif" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+          <label for="update-image" class="block text-sm font-medium text-gray-700">Product Image (jpg, jpeg, png)</label>
+          <input type="file" id="update-image" name="image" accept="image/jpeg,image/png" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
         </div>
         <div>
           <label for="update-is-active" class="block text-sm font-medium text-gray-700">Is Active</label>
@@ -134,13 +165,13 @@
 
     <!-- Delete Product -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Delete Product</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /products/&lt;product_id&gt;</code></p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Delete Product</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /products/<product_id></code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a specific product and its associated images (admin only).</p>
       <form id="delete-product-form" class="space-y-4">
         <div>
           <label for="delete-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
-          <input type="number" id="delete-product-id" name="product_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="delete-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Product</button>
       </form>
@@ -149,7 +180,7 @@
 
     <!-- Get All Products -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Get All Products</h2>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Get All Products</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /products</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all active products, including images (public access).</p>
       <form id="get-all-products-form" class="space-y-4">
@@ -168,17 +199,17 @@
 
     <!-- Add Product Image -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Add Product Image</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /products/&lt;product_id&gt;/images</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Adds a new image for a specific product (admin only).</p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">8. Add Product Image</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /products/<product_id>/images</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Adds a new image for a specific product via file upload (admin only).</p>
       <form id="add-product-image-form" class="space-y-4" enctype="multipart/form-data">
         <div>
           <label for="add-image-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
-          <input type="number" id="add-image-product-id" name="product_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="add-image-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
-          <label for="add-image" class="block text-sm font-medium text-gray-700">Product Image (jpg, jpeg, png, gif) *</label>
-          <input type="file" id="add-image" name="image" accept="image/jpeg,image/png,image/gif" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
+          <label for="add-image" class="block text-sm font-medium text-gray-700">Product Image (jpg, jpeg, png) *</label>
+          <input type="file" id="add-image" name="image" accept="image/jpeg,image/png" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add Image</button>
       </form>
@@ -187,13 +218,13 @@
 
     <!-- Get Product Image by ID -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">8. Get Product Image by ID</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /products/images/&lt;image_id&gt;</code></p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">9. Get Product Image by ID</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /products/images/<image_id></code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific product image by its ID (public access).</p>
       <form id="get-product-image-by-id-form" class="space-y-4">
         <div>
           <label for="image_id" class="block text-sm font-medium text-gray-700">Image ID *</label>
-          <input type="number" id="image_id" name="image_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="image_id" name="image_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Image</button>
       </form>
@@ -202,13 +233,13 @@
 
     <!-- Get Images by Product -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">9. Get Images by Product</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /products/&lt;product_id&gt;/images</code></p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">10. Get Images by Product</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /products/<product_id>/images</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all images for a specific product (public access).</p>
       <form id="get-images-by-product-form" class="space-y-4">
         <div>
           <label for="images-product-id" class="block text-sm font-medium text-gray-700">Product ID *</label>
-          <input type="number" id="images-product-id" name="product_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="images-product-id" name="product_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Images</button>
       </form>
@@ -217,17 +248,17 @@
 
     <!-- Update Product Image -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">10. Update Product Image</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /products/images/&lt;image_id&gt;</code></p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">11. Update Product Image</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /products/images/<image_id></code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a specific product image with a new file upload (admin only).</p>
       <form id="update-product-image-form" class="space-y-4" enctype="multipart/form-data">
         <div>
           <label for="update-image-id" class="block text-sm font-medium text-gray-700">Image ID *</label>
-          <input type="number" id="update-image-id" name="image_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="update-image-id" name="image_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
-          <label for="update-image-file" class="block text-sm font-medium text-gray-700">New Image (jpg, jpeg, png, gif) *</label>
-          <input type="file" id="update-image-file" name="image" accept="image/jpeg,image/png,image/gif" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
+          <label for="update-image-file" class="block text-sm font-medium text-gray-700">New Image (jpg, jpeg, png) *</label>
+          <input type="file" id="update-image-file" name="image" accept="image/jpeg,image/png" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Image</button>
       </form>
@@ -236,13 +267,13 @@
 
     <!-- Delete Product Image -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">11. Delete Product Image</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /products/images/&lt;image_id&gt;</code></p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">12. Delete Product Image</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /products/images/<image_id></code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a specific product image (admin only).</p>
       <form id="delete-product-image-form" class="space-y-4">
         <div>
           <label for="delete-image-id" class="block text-sm font-medium text-gray-700">Image ID *</label>
-          <input type="number" id="delete-image-id" name="image_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="delete-image-id" name="image_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Image</button>
       </form>
@@ -251,7 +282,7 @@
 
     <!-- Get All Product Images -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">12. Get All Product Images</h2>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">13. Get All Product Images</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /product_images</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all product images (public access).</p>
       <form id="get-all-product-images-form" class="space-y-4">

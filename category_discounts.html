@@ -1,4 +1,3 @@
-git push origin main --force
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,22 +27,22 @@ git push origin main --force
           <input type="number" id="add-category-id" name="category_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
-          <label for="add-discount-percent" class="block text-sm font-medium text-gray-700">Discount Percent (0-100) *</label>
-          <input type="number" id="add-discount-percent" name="discount_percent" step="0.01" min="0" max="100" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <label for="add-discount-percent" class="block text-sm font-medium text-gray-700">Discount Percent *</label>
+          <input type="number" id="add-discount-percent" name="discount_percent" step="0.01" min="0.01" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
-          <label for="add-starts-at" class="block text-sm font-medium text-gray-700">Starts At (ISO 8601, e.g., 2025-06-16T00:00:00Z)</label>
+          <label for="add-starts-at" class="block text-sm font-medium text-gray-700">Starts At (ISO 8601, e.g., 2025-06-25T12:00:00Z)</label>
           <input type="datetime-local" id="add-starts-at" name="starts_at" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
-          <label for="add-ends-at" class="block text-sm font-medium text-gray-700">Ends At (ISO 8601, e.g., 2025-07-16T23:59:59Z)</label>
+          <label for="add-ends-at" class="block text-sm font-medium text-gray-700">Ends At (ISO 8601, e.g., 2025-07-25T23:59:59Z)</label>
           <input type="datetime-local" id="add-ends-at" name="ends_at" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
           <label for="add-is-active" class="block text-sm font-medium text-gray-700">Is Active (default: Active)</label>
           <select id="add-is-active" name="is_active" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
           </select>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add Category Discount</button>
@@ -62,27 +61,23 @@ git push origin main --force
           <input type="number" id="update-discount-id" name="discount_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
-          <label for="update-category-id" class="block text-sm font-medium text-gray-700">Category ID</label>
-          <input type="number" id="update-category-id" name="category_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+          <label for="update-discount-percent" class="block text-sm font-medium text-gray-700">Discount Percent</label>
+          <input type="number" id="update-discount-percent" name="discount_percent" step="0.01" min="0.01" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
-          <label for="update-discount-percent" class="block text-sm font-medium text-gray-700">Discount Percent (0-100)</label>
-          <input type="number" id="update-discount-percent" name="discount_percent" step="0.01" min="0" max="100" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-        </div>
-        <div>
-          <label for="update-starts-at" class="block text-sm font-medium text-gray-700">Starts At (ISO 8601, e.g., 2025-06-16T00:00:00Z)</label>
+          <label for="update-starts-at" class="block text-sm font-medium text-gray-700">Starts At (ISO 8601, e.g., 2025-06-25T12:00:00Z)</label>
           <input type="datetime-local" id="update-starts-at" name="starts_at" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
-          <label for="update-ends-at" class="block text-sm font-medium text-gray-700">Ends At (ISO 8601, e.g., 2025-08-16T23:59:59Z)</label>
+          <label for="update-ends-at" class="block text-sm font-medium text-gray-700">Ends At (ISO 8601, e.g., 2025-07-25T23:59:59Z)</label>
           <input type="datetime-local" id="update-ends-at" name="ends_at" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
           <label for="update-is-active" class="block text-sm font-medium text-gray-700">Is Active</label>
           <select id="update-is-active" name="is_active" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
             <option value="">-- Select Status --</option>
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
           </select>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Category Discount</button>
@@ -92,9 +87,9 @@ git push origin main --force
 
     <!-- Get Category Discount by ID -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Category Discount by ID (Admin Only)</h2>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Category Discount by ID</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /category_discounts/<discount_id></code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific category discount by its ID (admin only).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific category discount by its ID.</p>
       <form id="get-category-discount-by-id-form" class="space-y-4">
         <div>
           <label for="get-discount-id" class="block text-sm font-medium text-gray-700">Discount ID *</label>
@@ -109,13 +104,13 @@ git push origin main --force
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Get Discounts by Category</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /category_discounts/category/<category_id></code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all discounts for a specific category (public access).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all discounts for a specific category.</p>
       <form id="get-discounts-by-category-form" class="space-y-4">
         <div>
           <label for="get-category-id" class="block text-sm font-medium text-gray-700">Category ID *</label>
           <input type="number" id="get-category-id" name="category_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Category Discounts</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Discounts</button>
       </form>
       <div id="get-discounts-by-category-response" class="mt-4 text-sm"></div>
     </div>
@@ -124,13 +119,13 @@ git push origin main --force
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Get Valid Category Discounts</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /category_discounts/valid/<category_id></code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all valid discounts for a specific category (public access).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all valid discounts for a specific category.</p>
       <form id="get-valid-category-discounts-form" class="space-y-4">
         <div>
           <label for="get-valid-category-id" class="block text-sm font-medium text-gray-700">Category ID *</label>
           <input type="number" id="get-valid-category-id" name="category_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Valid Category Discounts</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Valid Discounts</button>
       </form>
       <div id="get-valid-category-discounts-response" class="mt-4 text-sm"></div>
     </div>
@@ -152,9 +147,9 @@ git push origin main --force
 
     <!-- Get All Category Discounts -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Get All Category Discounts (Admin Only)</h2>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Get All Category Discounts</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /category_discounts</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all category discounts (admin only).</p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a paginated list of all category discounts.</p>
       <form id="get-all-category-discounts-form" class="space-y-4">
         <div>
           <label for="get-page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
@@ -164,7 +159,7 @@ git push origin main --force
           <label for="get-per-page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
           <input type="number" id="get-per-page" name="per_page" min="1" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch All Category Discounts</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch All Discounts</button>
       </form>
       <div id="get-all-category-discounts-response" class="mt-4 text-sm"></div>
     </div>

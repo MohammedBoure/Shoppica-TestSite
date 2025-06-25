@@ -11,7 +11,7 @@
     <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">User API Documentation</h1>
     <p class="text-gray-600 mb-8 text-center">
       Interact with the Authentication API endpoints hosted at 
-      <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank">API URL</a>
+      <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank"></a>
     </p>
     <p class="text-gray-600 mb-8 text-center"><a href="index.html" class="text-blue-600 hover:underline">Back to API Testing Hub</a></p>
 
@@ -30,7 +30,7 @@
           <input type="email" id="email" name="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">Password *</label>
+          <label for="password" class="block text-sm font-medium text-gray-700">Password * (min 6 characters)</label>
           <input type="password" id="password" name="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
@@ -41,10 +41,6 @@
           <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
           <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
-        <div>
-          <label for="is_admin" class="block text-sm font-medium text-gray-700">Is Admin</label>
-          <input type="checkbox" id="is_admin" name="is_admin" class="mt-1">
-        </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Submit</button>
       </form>
       <div id="add-user-response" class="mt-4 text-sm"></div>
@@ -53,8 +49,8 @@
     <!-- Get User by ID -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get User by ID</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /users/<user_id></code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves details of a specific user by their ID. Requires authentication.</p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /users/&lt;user_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves details of a specific user by their ID. Requires authentication (user or admin).</p>
       <form id="get-user-by-id-form" class="space-y-4">
         <div>
           <label for="user_id" class="block text-sm font-medium text-gray-700">User ID *</label>
@@ -68,8 +64,8 @@
     <!-- Get User by Email -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get User by Email</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /users/email/<email></code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves details of a specific user by their email. Requires authentication.</p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /users/email/&lt;email&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves details of a specific user by their email. Requires authentication (user or admin).</p>
       <form id="get-user-by-email-form" class="space-y-4">
         <div>
           <label for="get-email" class="block text-sm font-medium text-gray-700">Email *</label>
@@ -83,8 +79,8 @@
     <!-- Get User by Username -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Get User by Username</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /users/username/<username></code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves details of a specific user by their username. Requires authentication.</p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /users/username/&lt;username&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves details of a specific user by their username. Requires authentication (user or admin).</p>
       <form id="get-user-by-username-form" class="space-y-4">
         <div>
           <label for="get-username" class="block text-sm font-medium text-gray-700">Username *</label>
@@ -98,8 +94,8 @@
     <!-- Update User -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Update User</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /users/<user_id></code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates details of an existing user. Requires authentication.</p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /users/&lt;user_id&gt;</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates details of an existing user. Requires authentication (user or admin). Only admins can update <code>is_admin</code>.</p>
       <form id="update-user-form" class="space-y-4">
         <div>
           <label for="update-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
@@ -114,11 +110,11 @@
           <input type="text" id="update-phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
-          <label for="update-is_admin" class="block text-sm font-medium text-gray-700">Is Admin</label>
+          <label for="update-is_admin" class="block text-sm font-medium text-gray-700">Is Admin (Admin Only)</label>
           <input type="checkbox" id="update-is_admin" name="is_admin" class="mt-1">
         </div>
         <div>
-          <label for="update-password" class="block text-sm font-medium text-gray-700">New Password</label>
+          <label for="update-password" class="block text-sm font-medium text-gray-700">New Password (min 6 characters)</label>
           <input type="password" id="update-password" name="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update User</button>
@@ -129,7 +125,7 @@
     <!-- Delete User -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Delete User</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /users/<user_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /users/&lt;user_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a user by their ID. Requires admin privileges.</p>
       <form id="delete-user-form" class="space-y-4">
         <div>
@@ -163,8 +159,8 @@
     <!-- Validate User Password -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">8. Validate User Password</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /users/<user_id>/validate-password</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Validates a user's password. Requires authentication.</p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /users/&lt;user_id&gt;/validate-password</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Validates a user's password. Requires authentication (user or admin).</p>
       <form id="validate-password-form" class="space-y-4">
         <div>
           <label for="validate-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
@@ -177,6 +173,40 @@
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Validate Password</button>
       </form>
       <div id="validate-password-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Search Users -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">9. Search Users (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /users/search</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Searches for users by username or email (partial match). Requires admin privileges.</p>
+      <form id="search-users-form" class="space-y-4">
+        <div>
+          <label for="search-query" class="block text-sm font-medium text-gray-700">Search Query (Username or Email) *</label>
+          <input type="text" id="search-query" name="q" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="search-page" class="block text-sm font-medium text-gray-700">Page (default: 1)</label>
+          <input type="number" id="search-page" name="page" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="search-per_page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
+          <input type="number" id="search-per_page" name="per_page" min="1" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Search Users</button>
+      </form>
+      <div id="search-users-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Clear All Users -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">10. Clear All Users (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /users/clear-all</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes all users from the database. Requires admin privileges. <strong>Warning:</strong> This is a destructive operation.</p>
+      <form id="clear-all-users-form" class="space-y-4">
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Clear All Users</button>
+      </form>
+      <div id="clear-all-users-response" class="mt-4 text-sm"></div>
     </div>
   </div>
   <script src="/js/config.js"></script>

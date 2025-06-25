@@ -12,8 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const formData = new FormData(addPaymentForm);
       const data = Object.fromEntries(formData);
 
-      if (!data.user_id || !data.order_id || !data.payment_method) {
-        displayResponse('add-payment-response', { error: 'User ID, Order ID, and payment method are required' }, true);
+      if (!data.order_id || !data.payment_method) {
+        displayResponse('add-payment-response', { error: 'Order ID and payment method are required' }, true);
+        return;
+      }
+
+      const orderId = parseInt(data.order_id);
+      if (isNaN(orderId) || orderId <= 0) {
+        displayResponse('add-payment-response', { error: 'Order ID must be a positive integer' }, true);
         return;
       }
 
@@ -24,10 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         const body = {
-          order_id: parseInt(data.order_id),
+          order_id: orderId,
           payment_method: data.payment_method,
         };
-        if (data.transaction_id) body.transaction_id = data.transaction_id;
+        if (data.transaction_id && validateString(data.transaction_id)) body.transaction_id = data.transaction_id;
         if (data.payment_status) body.payment_status = data.payment_status;
 
         const response = await fetch(`${BASE_URL}/payments`, {
@@ -51,11 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
     getPaymentByIdForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(getPaymentByIdForm);
-      const paymentId = formData.get('payment_id');
-      const userId = formData.get('user_id');
+      const paymentId = parseInt(formData.get('payment_id'));
 
-      if (!paymentId || !userId) {
-        displayResponse('get-payment-by-id-response', { error: 'Payment ID and User ID are required' }, true);
+      if (isNaN(paymentId) || paymentId <= 0) {
+        displayResponse('get-payment-by-id-response', { error: 'Payment ID must be a positive integer' }, true);
         return;
       }
 
@@ -79,11 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
     getPaymentsByOrderForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(getPaymentsByOrderForm);
-      const orderId = formData.get('order_id');
-      const userId = formData.get('user_id');
+      const orderId = parseInt(formData.get('order_id'));
 
-      if (!orderId || !userId) {
-        displayResponse('get-payments-by-order-response', { error: 'Order ID and User ID are required' }, true);
+      if (isNaN(orderId) || orderId <= 0) {
+        displayResponse('get-payments-by-order-response', { error: 'Order ID must be a positive integer' }, true);
         return;
       }
 
@@ -109,15 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const formData = new FormData(updatePaymentForm);
       const data = Object.fromEntries(formData);
 
-      if (!data.payment_id) {
-        displayResponse('update-payment-response', { error: 'Payment ID is required' }, true);
+      const paymentId = parseInt(data.payment_id);
+      if (isNaN(paymentId) || paymentId <= 0) {
+        displayResponse('update-payment-response', { error: 'Payment ID must be a positive integer' }, true);
         return;
       }
 
       const body = {};
       if (data.payment_method && validateString(data.payment_method)) body.payment_method = data.payment_method;
-      if (data.payment_status) body.payment_status = data.payment_status;
-      if (data.transaction_id) body.transaction_id = data.transaction_id;
+      if (data.payment_status && validateString(data.payment_status)) body.payment_status = data.payment_status;
+      if (data.transaction_id && validateString(data.transaction_id)) body.transaction_id = data.transaction_id;
 
       if (Object.keys(body).length === 0) {
         displayResponse('update-payment-response', { error: 'At least one field (payment method, payment status, or transaction ID) must be provided' }, true);
@@ -125,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        const response = await fetch(`${BASE_URL}/payments/${data.payment_id}`, {
+        const response = await fetch(`${BASE_URL}/payments/${paymentId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -146,10 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
     deletePaymentForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(deletePaymentForm);
-      const paymentId = formData.get('payment_id');
+      const paymentId = parseInt(formData.get('payment_id'));
 
-      if (!paymentId) {
-        displayResponse('delete-payment-response', { error: 'Payment ID is required' }, true);
+      if (isNaN(paymentId) || paymentId <= 0) {
+        displayResponse('delete-payment-response', { error: 'Payment ID must be a positive integer' }, true);
         return;
       }
 
@@ -173,8 +178,13 @@ document.addEventListener('DOMContentLoaded', () => {
     getAllPaymentsForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(getAllPaymentsForm);
-      const page = formData.get('page') || 1;
-      const perPage = formData.get('per_page') || 20;
+      const page = parseInt(formData.get('page')) || 1;
+      const perPage = parseInt(formData.get('per_page')) || 20;
+
+      if (page < 1 || perPage < 1) {
+        displayResponse('get-all-payments-response', { error: 'Page and per_page must be positive integers' }, true);
+        return;
+      }
 
       try {
         const response = await fetch(`${BASE_URL}/payments?page=${page}&per_page=${perPage}`, {

@@ -7,21 +7,56 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Helper function to display response
-  const displayResponse = (elementId, response) => {
+  const displayResponse = (elementId, response, status) => {
     const responseElement = document.getElementById(elementId);
     if (responseElement) {
       const codeElement = responseElement.querySelector('code');
       if (codeElement) {
-        codeElement.textContent = JSON.stringify(response, null, 2);
-        Prism.highlightAll(); // Re-highlight syntax
+        try {
+          codeElement.textContent = JSON.stringify(response, null, 2);
+          Prism.highlightAll(); // Re-highlight syntax
+        } catch (error) {
+          codeElement.textContent = `Error: ${response || 'Invalid response format'}`;
+        }
       }
     }
   };
 
+  // Helper function to validate positive integer
+  const validatePositiveInteger = (value, fieldName) => {
+    const num = parseInt(value);
+    if (isNaN(num) || num < 1) {
+      return { valid: false, error: `${fieldName} must be a positive integer` };
+    }
+    return { valid: true, value: num };
+  };
+
   // Helper function to validate rating
-  const validateRating = (rating) => {
+  const validateRating = (rating, fieldName = 'Rating') => {
     const num = parseInt(rating);
-    return !isNaN(num) && num >= 1 && num <= 5;
+    if (rating && (isNaN(num) || num < 1 || num > 5)) {
+      return { valid: false, error: `${fieldName} must be between 1 and 5` };
+    }
+    return { valid: true, value: num };
+  };
+
+  // Helper function to handle fetch errors
+  const handleFetchError = async (response) => {
+    const result = await response.json();
+    if (!response.ok) {
+      if (response.status === 401) {
+        return { error: 'Unauthorized: Please log in' };
+      } else if (response.status === 403) {
+        return { error: 'Forbidden: Insufficient permissions' };
+      } else if (response.status === 404) {
+        return { error: result.error || 'Resource not found' };
+      } else if (response.status === 400) {
+        return { error: result.error || 'Bad request' };
+      } else {
+        return { error: result.error || 'Server error' };
+      }
+    }
+    return result;
   };
 
   // 1. Add New Review
@@ -31,14 +66,21 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const formData = new FormData(addReviewForm);
       const data = Object.fromEntries(formData);
-      
-      if (!data.user_id || !data.product_id || !data.rating) {
-        displayResponse('add-review-response', { error: 'User ID, product ID, and rating are required' });
+
+      // Validate inputs
+      const userIdValidation = validatePositiveInteger(data.user_id, 'User ID');
+      if (!userIdValidation.valid) {
+        displayResponse('add-review-response', { error: userIdValidation.error }, 400);
         return;
       }
-
-      if (!validateRating(data.rating)) {
-        displayResponse('add-review-response', { error: 'Rating must be between 1 and 5' });
+      const productIdValidation = validatePositiveInteger(data.product_id, 'Product ID');
+      if (!productIdValidation.valid) {
+        displayResponse('add-review-response', { error: productIdValidation.error }, 400);
+        return;
+      }
+      const ratingValidation = validateRating(data.rating);
+      if (!ratingValidation.valid) {
+        displayResponse('add-review-response', { error: ratingValidation.error }, 400);
         return;
       }
 
@@ -48,17 +90,17 @@ document.addEventListener('DOMContentLoaded', () => {
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
           body: JSON.stringify({
-            user_id: parseInt(data.user_id),
-            product_id: parseInt(data.product_id),
-            rating: parseInt(data.rating),
-            comment: data.comment || ''
+            user_id: userIdValidation.value,
+            product_id: productIdValidation.value,
+            rating: ratingValidation.value,
+            comment: data.comment || null
           })
         });
-        const result = await response.json();
-        displayResponse('add-review-response', result);
+        const result = await handleFetchError(response);
+        displayResponse('add-review-response', result, response.status);
       } catch (error) {
         console.error('Error adding review:', error);
-        displayResponse('add-review-response', { error: 'Failed to add review' });
+        displayResponse('add-review-response', { error: 'Failed to add review' }, 500);
       }
     });
   }
@@ -69,23 +111,22 @@ document.addEventListener('DOMContentLoaded', () => {
     getReviewByIdForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(getReviewByIdForm);
-      const reviewId = formData.get('review_id');
-
-      if (!reviewId) {
-        displayResponse('get-review-by-id-response', { error: 'Review ID is required' });
+      const reviewIdValidation = validatePositiveInteger(formData.get('review_id'), 'Review ID');
+      if (!reviewIdValidation.valid) {
+        displayResponse('get-review-by-id-response', { error: reviewIdValidation.error }, 400);
         return;
       }
 
       try {
-        const response = await fetch(`${BASE_URL}/reviews/${reviewId}`, {
+        const response = await fetch(`${BASE_URL}/reviews/${reviewIdValidation.value}`, {
           method: 'GET',
           credentials: 'include'
         });
-        const result = await response.json();
-        displayResponse('get-review-by-id-response', result);
+        const result = await handleFetchError(response);
+        displayResponse('get-review-by-id-response', result, response.status);
       } catch (error) {
         console.error('Error fetching review:', error);
-        displayResponse('get-review-by-id-response', { error: 'Failed to fetch review' });
+        displayResponse('get-review-by-id-response', { error: 'Failed to fetch review' }, 500);
       }
     });
   }
@@ -96,23 +137,22 @@ document.addEventListener('DOMContentLoaded', () => {
     getReviewsByProductForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(getReviewsByProductForm);
-      const productId = formData.get('product_id');
-
-      if (!productId) {
-        displayResponse('get-reviews-by-product-response', { error: 'Product ID is required' });
+      const productIdValidation = validatePositiveInteger(formData.get('product_id'), 'Product ID');
+      if (!productIdValidation.valid) {
+        displayResponse('get-reviews-by-product-response', { error: productIdValidation.error }, 400);
         return;
       }
 
       try {
-        const response = await fetch(`${BASE_URL}/reviews/product/${productId}`, {
+        const response = await fetch(`${BASE_URL}/reviews/product/${productIdValidation.value}`, {
           method: 'GET',
           credentials: 'include'
         });
-        const result = await response.json();
-        displayResponse('get-reviews-by-product-response', result);
+        const result = await handleFetchError(response);
+        displayResponse('get-reviews-by-product-response', result, response.status);
       } catch (error) {
         console.error('Error fetching reviews:', error);
-        displayResponse('get-reviews-by-product-response', { error: 'Failed to fetch reviews' });
+        displayResponse('get-reviews-by-product-response', { error: 'Failed to fetch reviews' }, 500);
       }
     });
   }
@@ -125,13 +165,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const formData = new FormData(updateReviewForm);
       const data = Object.fromEntries(formData);
 
-      if (!data.review_id || !data.user_id) {
-        displayResponse('update-review-response', { error: 'Review ID and User ID are required' });
+      const reviewIdValidation = validatePositiveInteger(data.review_id, 'Review ID');
+      if (!reviewIdValidation.valid) {
+        displayResponse('update-review-response', { error: reviewIdValidation.error }, 400);
         return;
       }
 
-      if (data.rating && !validateRating(data.rating)) {
-        displayResponse('update-review-response', { error: 'Rating must be between 1 and 5' });
+      if (data.rating && !validateRating(data.rating).valid) {
+        displayResponse('update-review-response', { error: 'Rating must be between 1 and 5' }, 400);
         return;
       }
 
@@ -140,17 +181,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.comment) body.comment = data.comment;
 
       try {
-        const response = await fetch(`${BASE_URL}/reviews/${data.review_id}`, {
+        const response = await fetch(`${BASE_URL}/reviews/${reviewIdValidation.value}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
           body: JSON.stringify(body)
         });
-        const result = await response.json();
-        displayResponse('update-review-response', result);
+        const result = await handleFetchError(response);
+        displayResponse('update-review-response', result, response.status);
       } catch (error) {
         console.error('Error updating review:', error);
-        displayResponse('update-review-response', { error: 'Failed to update review' });
+        displayResponse('update-review-response', { error: 'Failed to update review' }, 500);
       }
     });
   }
@@ -161,24 +202,24 @@ document.addEventListener('DOMContentLoaded', () => {
     deleteReviewForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(deleteReviewForm);
-      const reviewId = formData.get('review_id');
-      const userId = formData.get('user_id');
-
-      if (!reviewId || !userId) {
-        displayResponse('delete-review-response', { error: 'Review ID and User ID are required' });
+      const reviewIdValidation = validatePositiveInteger(formData.get('review_id'), 'Review ID');
+      if (!reviewIdValidation.valid) {
+        displayResponse('delete-review-response', { error: reviewIdValidation.error }, 400);
         return;
       }
 
       try {
-        const response = await fetch(`${BASE_URL}/reviews/${reviewId}`, {
+        const response = await fetch(`${BASE_URL}/reviews/${reviewIdValidation.value}`, {
           method: 'DELETE',
           credentials: 'include'
         });
-        const result = await response.json();
-        displayResponse('delete-review-response', result);
+        const result = await handletrasound
+
+System: FetchError(response);
+        displayResponse('delete-review-response', result, response.status);
       } catch (error) {
         console.error('Error deleting review:', error);
-        displayResponse('delete-review-response', { error: 'Failed to delete review' });
+        displayResponse('delete-review-response', { error: 'Failed to delete review' }, 500);
       }
     });
   }
@@ -189,19 +230,229 @@ document.addEventListener('DOMContentLoaded', () => {
     getAllReviewsForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(getAllReviewsForm);
-      const page = formData.get('page') || 1;
-      const perPage = formData.get('per_page') || 20;
+      const pageValidation = validatePositiveInteger(formData.get('page') || 1, 'Page');
+      const perPageValidation = validatePositiveInteger(formData.get('per_page') || 20, 'Per Page');
+      if (!pageValidation.valid) {
+        displayResponse('get-all-reviews-response', { error: pageValidation.error }, 400);
+        return;
+      }
+      if (!perPageValidation.valid) {
+        displayResponse('get-all-reviews-response', { error: perPageValidation.error }, 400);
+        return;
+      }
 
       try {
-        const response = await fetch(`${BASE_URL}/reviews?page=${page}&per_page=${perPage}`, {
+        const response = await fetch(`${BASE_URL}/reviews?page=${pageValidation.value}&per_page=${perPageValidation.value}`, {
           method: 'GET',
           credentials: 'include'
         });
-        const result = await response.json();
-        displayResponse('get-all-reviews-response', result);
+        const result = await handleFetchError(response);
+        displayResponse('get-all-reviews-response', result, response.status);
       } catch (error) {
         console.error('Error fetching all reviews:', error);
-        displayResponse('get-all-reviews-response', { error: 'Failed to fetch reviews' });
+        displayResponse('get-all-reviews-response', { error: 'Failed to fetch reviews' }, 500);
+      }
+    });
+  }
+
+ 
+  // 7. Search Reviews
+  const searchReviewsForm = document.getElementById('search-reviews-form');
+  if (searchReviewsForm) {
+    searchReviewsForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(searchReviewsForm);
+      const data = Object.fromEntries(formData);
+
+      const params = new URLSearchParams();
+
+      // Validate and append product_id
+      if (data.product_id) {
+        const productIdValidation = validatePositiveInteger(data.product_id, 'Product ID');
+        if (!productIdValidation.valid) {
+          displayResponse('search-reviews-response', { error: productIdValidation.error }, 400);
+          return;
+        }
+        params.append('product_id', productIdValidation.value);
+      }
+
+      // Validate and append user_id
+      if (data.user_id) {
+        const userIdValidation = validatePositiveInteger(data.user_id, 'User ID');
+        if (!userIdValidation.valid) {
+          displayResponse('search-reviews-response', { error: userIdValidation.error }, 400);
+          return;
+        }
+        params.append('user_id', userIdValidation.value);
+      }
+
+      // Validate and append min_rating
+      if (data.min_rating) {
+        const minRatingValidation = validateRating(data.min_rating, 'Min Rating');
+        if (!minRatingValidation.valid) {
+          displayResponse('search-reviews-response', { error: minRatingValidation.error }, 400);
+          return;
+        }
+        params.append('min_rating', minRatingValidation.value);
+      }
+
+      // Validate and append max_rating
+      if (data.max_rating) {
+        const maxRatingValidation = validateRating(data.max_rating, 'Max Rating');
+        if (!maxRatingValidation.valid) {
+          displayResponse('search-reviews-response', { error: maxRatingValidation.error }, 400);
+          return;
+        }
+        params.append('max_rating', maxRatingValidation.value);
+      }
+
+      // Append comment (no validation needed)
+      if (data.comment && data.comment.trim() !== '') {
+        params.append('comment', data.comment.trim());
+      }
+
+      // Validate and append page
+      const pageValidation = validatePositiveInteger(data.page || 1, 'Page');
+      if (!pageValidation.valid) {
+        displayResponse('search-reviews-response', { error: pageValidation.error }, 400);
+        return;
+      }
+      params.append('page', pageValidation.value);
+
+      // Validate and append per_page
+      const perPageValidation = validatePositiveInteger(data.per_page || 20, 'Per Page');
+      if (!perPageValidation.valid) {
+        displayResponse('search-reviews-response', { error: perPageValidation.error }, 400);
+        return;
+      }
+      params.append('per_page', perPageValidation.value);
+
+      // Require at least one filter parameter
+      if (
+        !data.product_id &&
+        !data.user_id &&
+        !data.min_rating &&
+        !data.max_rating &&
+        !data.comment
+      ) {
+        displayResponse('search-reviews-response', {
+          error: 'At least one search parameter is required (product_id, user_id, min_rating, max_rating, comment)'
+        }, 400);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/reviews/search?${params.toString()}`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        const result = await handleFetchError(response);
+        displayResponse('search-reviews-response', result, response.status);
+      } catch (error) {
+        console.error('Error searching reviews:', error);
+        displayResponse('search-reviews-response', { error: 'Failed to search reviews' }, 500);
+      }
+    });
+  }
+
+
+  // 8. Delete Reviews by Product
+  const deleteReviewsByProductForm = document.getElementById('delete-reviews-by-product-form');
+  if (deleteReviewsByProductForm) {
+    deleteReviewsByProductForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(deleteReviewsByProductForm);
+      const productIdValidation = validatePositiveInteger(formData.get('product_id'), 'Product ID');
+      if (!productIdValidation.valid) {
+        displayResponse('delete-reviews-by-product-response', { error: productIdValidation.error }, 400);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/reviews/by-product/${productIdValidation.value}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        const result = await handleFetchError(response);
+        displayResponse('delete-reviews-by-product-response', result, response.status);
+      } catch (error) {
+        console.error('Error deleting reviews by product:', error);
+        displayResponse('delete-reviews-by-product-response', { error: 'Failed to delete reviews' }, 500);
+      }
+    });
+  }
+
+  // 9. Delete Reviews by User
+const deleteReviewsByUserForm = document.getElementById('delete-reviews-by-user-form');
+
+if (deleteReviewsByUserForm) {
+  deleteReviewsByUserForm.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent the form from submitting in the default way
+
+    const formData = new FormData(deleteReviewsByUserForm);
+    const userIdValidation = validatePositiveInteger(formData.get('user_id'), 'User ID');
+
+    if (!userIdValidation.valid) {
+      displayResponse('delete-reviews-by-user-response', { error: userIdValidation.error }, 400);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BASE_URL}/reviews/by-user/${userIdValidation.value}`, {
+        method: 'DELETE',
+        credentials: 'include' // include cookies (like auth tokens)
+      });
+
+      const result = await handleFetchError(response);
+      displayResponse('delete-reviews-by-user-response', result, response.status);
+    } catch (error) {
+      console.error('Error deleting reviews by user:', error);
+      displayResponse('delete-reviews-by-user-response', { error: 'Failed to delete reviews' }, 500);
+    }
+  });
+}
+
+  // 10. Get Product Review Stats
+  const getProductReviewStatsForm = document.getElementById('get-product-review-stats-form');
+  if (getProductReviewStatsForm) {
+    getProductReviewStatsForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(getProductReviewStatsForm);
+      const productIdValidation = validatePositiveInteger(formData.get('product_id'), 'Product ID');
+      if (!productIdValidation.valid) {
+        displayResponse('get-product-review-stats-response', { error: productIdValidation.error }, 400);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/reviews/stats/product/${productIdValidation.value}`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        const result = await handleFetchError(response);
+        displayResponse('get-product-review-stats-response', result, response.status);
+      } catch (error) {
+        console.error('Error fetching product review stats:', error);
+        displayResponse('get-product-review-stats-response', { error: 'Failed to fetch stats' }, 500);
+      }
+    });
+  }
+
+  // 11. Get Overall Review Stats
+  const getOverallReviewStatsForm = document.getElementById('get-overall-review-stats-form');
+  if (getOverallReviewStatsForm) {
+    getOverallReviewStatsForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const response = await fetch(`${BASE_URL}/reviews/stats/overall`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        const result = await handleFetchError(response);
+        displayResponse('get-overall-review-stats-response', result, response.status);
+      } catch (error) {
+        console.error('Error fetching overall review stats:', error);
+        displayResponse('get-overall-review-stats-response', { error: 'Failed to fetch stats' }, 500);
       }
     });
   }

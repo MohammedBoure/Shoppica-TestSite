@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -74,7 +35,7 @@
           <input type="number" id="add-max-uses" name="max_uses" min="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
-          <label for="add-expires-at" class="block text-sm font-medium text-gray-700">Expires At (ISO 8601, e.g., 2025-08-31T23:59:59Z)</label>
+          <label for="add-expires-at" class="block text-sm font-medium text-gray-700">Expires At (optional)</label>
           <input type="datetime-local" id="add-expires-at" name="expires_at" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
@@ -89,12 +50,12 @@
     <!-- Get Discount by ID -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get Discount by ID (Admin Only)</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /discounts/<discount_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /discounts/&lt;discount_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific discount by its ID (admin only).</p>
       <form id="get-discount-by-id-form" class="space-y-4">
         <div>
           <label for="get-discount-id" class="block text-sm font-medium text-gray-700">Discount ID *</label>
-          <input type="number" id="get-discount-id" name="discount_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="get-discount-id" name="discount_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Discount</button>
       </form>
@@ -104,16 +65,12 @@
     <!-- Get Discount by Code -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Discount by Code</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /discounts/code/<code></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /discounts/code/&lt;code&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a discount by its code (authenticated user only).</p>
       <form id="get-discount-by-code-form" class="space-y-4">
         <div>
           <label for="get-code" class="block text-sm font-medium text-gray-700">Discount Code *</label>
           <input type="text" id="get-code" name="code" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-        </div>
-        <div>
-          <label for="get-code-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
-          <input type="number" id="get-code-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Discount</button>
       </form>
@@ -123,16 +80,12 @@
     <!-- Get Valid Discount by Code -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Get Valid Discount by Code</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /discounts/valid/<code></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /discounts/valid/&lt;code&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a valid discount by its code (authenticated user only).</p>
       <form id="get-valid-discount-by-code-form" class="space-y-4">
         <div>
           <label for="get-valid-code" class="block text-sm font-medium text-gray-700">Discount Code *</label>
           <input type="text" id="get-valid-code" name="code" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-        </div>
-        <div>
-          <label for="get-valid-code-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
-          <input type="number" id="get-valid-code-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Valid Discount</button>
       </form>
@@ -142,12 +95,12 @@
     <!-- Update Discount -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Update Discount (Admin Only)</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /discounts/<discount_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /discounts/&lt;discount_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates a discount's details (admin only).</p>
       <form id="update-discount-form" class="space-y-4">
         <div>
           <label for="update-discount-id" class="block text-sm font-medium text-gray-700">Discount ID *</label>
-          <input type="number" id="update-discount-id" name="discount_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="update-discount-id" name="discount_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
           <label for="update-code" class="block text-sm font-medium text-gray-700">Discount Code</label>
@@ -162,7 +115,7 @@
           <input type="number" id="update-max-uses" name="max_uses" min="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
-          <label for="update-expires-at" class="block text-sm font-medium text-gray-700">Expires At (ISO 8601, e.g., 2025-08-31T23:59:59Z)</label>
+          <label for="update-expires-at" class="block text-sm font-medium text-gray-700">Expires At (optional)</label>
           <input type="datetime-local" id="update-expires-at" name="expires_at" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
@@ -173,8 +126,8 @@
           <label for="update-is-active" class="block text-sm font-medium text-gray-700">Is Active</label>
           <select id="update-is-active" name="is_active" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
             <option value="">-- Select Status --</option>
-            <option value="1">Active</option>
-            <option value="0">Inactive</option>
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
           </select>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Discount</button>
@@ -185,12 +138,12 @@
     <!-- Delete Discount -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Delete Discount (Admin Only)</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /discounts/<discount_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /discounts/&lt;discount_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes a discount by its ID (admin only).</p>
       <form id="delete-discount-form" class="space-y-4">
         <div>
           <label for="delete-discount-id" class="block text-sm font-medium text-gray-700">Discount ID *</label>
-          <input type="number" id="delete-discount-id" name="discount_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="delete-discount-id" name="discount_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Discount</button>
       </form>

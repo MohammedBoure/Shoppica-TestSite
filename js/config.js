@@ -6,6 +6,7 @@ function getBackendUrl() {
 
 const BASE_URL = getBackendUrl();
 
+// Display response function from provided code
 function displayResponse(elementId, response, isError = false) {
   const element = document.getElementById(elementId);
   if (!element) return;
@@ -25,3 +26,4 @@ document.addEventListener('DOMContentLoaded', () => {
     apiLink.textContent = BASE_URL;
   }
 });
+

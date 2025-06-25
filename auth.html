@@ -11,22 +11,22 @@
     <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Authentication API Documentation</h1>
     <p class="text-gray-600 mb-8 text-center">
       Interact with the Authentication API endpoints hosted at 
-      <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank">API URL</a>
+      <a id="api-url" href="#" class="text-blue-600 hover:underline" target="_blank"></a>
     </p>
     <p class="text-gray-600 mb-8 text-center"><a href="index.html" class="text-blue-600 hover:underline">Back to API Testing Hub</a></p>
 
     <!-- Login -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Login</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /login</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Authenticates a user and establishes a session.</p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /auth/login</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Authenticates a user and establishes a session. No authentication required.</p>
       <form id="login-form" class="space-y-4">
         <div>
-          <label for="login-email" class="block text-sm font-medium text-gray-700">Email *</label>
+          <label for="login-email" class="block text-sm font-medium text-gray-700">Email * (valid format)</label>
           <input type="email" id="login-email" name="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
-          <label for="login-password" class="block text-sm font-medium text-gray-700">Password *</label>
+          <label for="login-password" class="block text-sm font-medium text-gray-700">Password * (min 6 characters)</label>
           <input type="password" id="login-password" name="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Login</button>
@@ -37,8 +37,8 @@
     <!-- Get Current User -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get Current User</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /me</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves details of the currently authenticated user.</p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /auth/me</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves details of the currently authenticated user. Requires a valid session.</p>
       <button id="get-user-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch User</button>
       <div id="get-user-response" class="mt-4 text-sm"></div>
     </div>
@@ -46,9 +46,9 @@
     <!-- Logout -->
     <div class="bg-white shadow-md rounded-lg p-6">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Logout</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /logout</code></p>
-      <p class="text-gray-600 mb-4"><strong>Description:</strong> Logs out the current user by clearing the session.</p>
-      <button id="logout-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Logout</button>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">POST /auth/logout</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Logs out the current user by clearing the session. Requires a valid session.</p>
+      <button id="logout-btn" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Logout</button>
       <div id="logout-response" class="mt-4 text-sm"></div>
     </div>
   </div>

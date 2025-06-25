@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -62,12 +23,12 @@
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Creates a new order for a user (authenticated user or admin only).</p>
       <form id="add-order-form" class="space-y-4">
         <div>
-          <label for="add-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
-          <input type="number" id="add-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <label for="add-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
+          <input type="number" id="add-user-id" name="user_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
           <label for="add-shipping-address-id" class="block text-sm font-medium text-gray-700">Shipping Address ID *</label>
-          <input type="number" id="add-shipping-address-id" name="shipping_address_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="add-shipping-address-id" name="shipping_address_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
           <label for="add-total-price" class="block text-sm font-medium text-gray-700">Total Price *</label>
@@ -77,8 +38,10 @@
           <label for="add-status" class="block text-sm font-medium text-gray-700">Status (default: pending)</label>
           <select id="add-status" name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
             <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
             <option value="shipped">Shipped</option>
             <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
           </select>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Add Order</button>
@@ -89,16 +52,12 @@
     <!-- Get Order by ID -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Get Order by ID</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /orders/<order_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /orders/&lt;order_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves a specific order by its ID (owner or admin only).</p>
       <form id="get-order-by-id-form" class="space-y-4">
         <div>
           <label for="get-order-id" class="block text-sm font-medium text-gray-700">Order ID *</label>
-          <input type="number" id="get-order-id" name="order_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-        </div>
-        <div>
-          <label for="get-order-user-id" class="block text-sm font-medium text-gray-700">User ID (Session) *</label>
-          <input type="number" id="get-order-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="get-order-id" name="order_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Order</button>
       </form>
@@ -108,12 +67,12 @@
     <!-- Get Orders by User -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Get Orders by User</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /orders/user/<user_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /orders/user/&lt;user_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves all orders for a specific user (owner or admin only).</p>
       <form id="get-orders-by-user-form" class="space-y-4">
         <div>
           <label for="get-user-id" class="block text-sm font-medium text-gray-700">User ID *</label>
-          <input type="number" id="get-user-id" name="user_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="get-user-id" name="user_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Orders</button>
       </form>
@@ -123,20 +82,22 @@
     <!-- Update Order -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Update Order (Admin Only)</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /orders/<order_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">PUT /orders/&lt;order_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Updates an order's details (admin only).</p>
       <form id="update-order-form" class="space-y-4">
         <div>
           <label for="update-order-id" class="block text-sm font-medium text-gray-700">Order ID *</label>
-          <input type="number" id="update-order-id" name="order_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="update-order-id" name="order_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <div>
           <label for="update-status" class="block text-sm font-medium text-gray-700">Status</label>
           <select id="update-status" name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
             <option value="">-- Select Status --</option>
             <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
             <option value="shipped">Shipped</option>
             <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
           </select>
         </div>
         <div>
@@ -145,7 +106,7 @@
         </div>
         <div>
           <label for="update-shipping-address-id" class="block text-sm font-medium text-gray-700">Shipping Address ID</label>
-          <input type="number" id="update-shipping-address-id" name="shipping_address_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+          <input type="number" id="update-shipping-address-id" name="shipping_address_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Order</button>
       </form>
@@ -155,19 +116,19 @@
     <!-- Delete Order -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Delete Order (Admin Only)</h2>
-      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /orders/<order_id></code></p>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">DELETE /orders/&lt;order_id&gt;</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Deletes an order by its ID (admin only).</p>
       <form id="delete-order-form" class="space-y-4">
         <div>
           <label for="delete-order-id" class="block text-sm font-medium text-gray-700">Order ID *</label>
-          <input type="number" id="delete-order-id" name="order_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+          <input type="number" id="delete-order-id" name="order_id" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
         </div>
         <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Order</button>
       </form>
       <div id="delete-order-response" class="mt-4 text-sm"></div>
     </div>
 
-    <!-- Get All Orders (Admin Only) -->
+    <!-- Get All Orders -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Get All Orders (Admin Only)</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /orders</code></p>
@@ -178,12 +139,96 @@
           <input type="number" id="get-page" name="page" min="1" value="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <div>
-          <label for="get-per-page" class="block text-sm font-medium text-gray-700">Per Page (default: 20)</label>
-          <input type="number" id="get-per-page" name="per_page" min="1" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+          <label for="get-per-page" class="block text-sm font-medium text-gray-700">Per Page (default: 20, max: 100)</label>
+          <input type="number" id="get-per-page" name="per_page" min="1" max="100" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
         </div>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Orders</button>
       </form>
       <div id="get-all-orders-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Search Orders -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">7. Search Orders (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /orders/search</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Searches orders by multiple criteria (admin only).</p>
+      <form id="search-orders-form" class="space-y-4">
+        <div>
+          <label for="search-term" class="block text-sm font-medium text-gray-700">Search Term (Username, Email, or Order ID)</label>
+          <input type="text" id="search-term" name="search_term" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="search-status" class="block text-sm font-medium text-gray-700">Status</label>
+          <select id="search-status" name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <option value="">-- Select Status --</option>
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div>
+          <label for="search-min-total" class="block text-sm font-medium text-gray-700">Minimum Total Price</label>
+          <input type="number" id="search-min-total" name="min_total" step="0.01" min="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="search-max-total" class="block text-sm font-medium text-gray-700">Maximum Total Price</label>
+          <input type="number" id="search-max-total" name="max_total" step="0.01" min="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="search-start-date" class="block text-sm font-medium text-gray-700">Start Date (YYYY-MM-DD)</label>
+          <input type="date" id="search-start-date" name="start_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="search-end-date" class="block text-sm font-medium text-gray-700">End Date (YYYY-MM-DD)</label>
+          <input type="date" id="search-end-date" name="end_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Search Orders</button>
+      </form>
+      <div id="search-orders-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Order Statistics -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">8. Get Order Statistics (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /orders/statistics</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves order statistics (admin only).</p>
+      <form id="get-statistics-form" class="space-y-4">
+        <div>
+          <label for="stats-start-date" class="block text-sm font-medium text-gray-700">Start Date (YYYY-MM-DD)</label>
+          <input type="date" id="stats-start-date" name="start_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="stats-end-date" class="block text-sm font-medium text-gray-700">End Date (YYYY-MM-DD)</label>
+          <input type="date" id="stats-end-date" name="end_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Statistics</button>
+      </form>
+      <div id="get-statistics-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Get Top Selling Products -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">9. Get Top Selling Products (Admin Only)</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /orders/top-products</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves top-selling products (admin only).</p>
+      <form id="get-top-products-form" class="space-y-4">
+        <div>
+          <label for="top-products-start-date" class="block text-sm font-medium text-gray-700">Start Date (YYYY-MM-DD)</label>
+          <input type="date" id="top-products-start-date" name="start_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="top-products-end-date" class="block text-sm font-medium text-gray-700">End Date (YYYY-MM-DD)</label>
+          <input type="date" id="top-products-end-date" name="end_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="top-products-limit" class="block text-sm font-medium text-gray-700">Limit (1-50, default: 5)</label>
+          <input type="number" id="top-products-limit" name="limit" min="1" max="50" value="5" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Top Products</button>
+      </form>
+      <div id="get-top-products-response" class="mt-4 text-sm"></div>
     </div>
   </div>
 </body>

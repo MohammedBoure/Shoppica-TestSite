@@ -1,9 +1,37 @@
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+function displayResponse(elementId, data, isError = false) {
+  const responseDiv = document.getElementById(elementId);
+  responseDiv.innerHTML = '';
+  responseDiv.className = `mt-4 text-sm ${isError ? 'text-red-600' : 'text-green-600'}`;
+  const pre = document.createElement('pre');
+  pre.textContent = JSON.stringify(data, null, 2);
+  responseDiv.appendChild(pre);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Set API URL in the HTML
+  const apiUrlElement = document.getElementById('api-url');
+  apiUrlElement.href = BASE_URL;
+  apiUrlElement.textContent = BASE_URL;
+});
+
 // Add New User
 document.getElementById('add-user-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = new FormData(e.target);
   const data = Object.fromEntries(formData);
-  data.is_admin = formData.get('is_admin') === 'on';
+  
+  // Client-side validation
+  if (!emailRegex.test(data.email)) {
+    displayResponse('add-user-response', { error: 'Invalid email format' }, true);
+    return;
+  }
+  if (data.password.length < 6) {
+    displayResponse('add-user-response', { error: 'Password must be at least 6 characters long' }, true);
+    return;
+  }
+
   try {
     const response = await fetch(`${BASE_URL}/users`, {
       method: 'POST',
@@ -24,6 +52,10 @@ document.getElementById('get-user-by-id-form').addEventListener('submit', async 
   e.preventDefault();
   const formData = new FormData(e.target);
   const userId = formData.get('user_id');
+  if (!userId || userId <= 0) {
+    displayResponse('get-user-by-id-response', { error: 'Valid User ID is required' }, true);
+    return;
+  }
   try {
     const response = await fetch(`${BASE_URL}/users/${userId}`, {
       method: 'GET',
@@ -42,6 +74,10 @@ document.getElementById('get-user-by-email-form').addEventListener('submit', asy
   e.preventDefault();
   const formData = new FormData(e.target);
   const email = encodeURIComponent(formData.get('email'));
+  if (!emailRegex.test(formData.get('email'))) {
+    displayResponse('get-user-by-email-response', { error: 'Invalid email format' }, true);
+    return;
+  }
   try {
     const response = await fetch(`${BASE_URL}/users/email/${email}`, {
       method: 'GET',
@@ -60,6 +96,10 @@ document.getElementById('get-user-by-username-form').addEventListener('submit', 
   e.preventDefault();
   const formData = new FormData(e.target);
   const username = encodeURIComponent(formData.get('username'));
+  if (!username) {
+    displayResponse('get-user-by-username-response', { error: 'Username is required' }, true);
+    return;
+  }
   try {
     const response = await fetch(`${BASE_URL}/users/username/${username}`, {
       method: 'GET',
@@ -78,11 +118,22 @@ document.getElementById('update-user-form').addEventListener('submit', async (e)
   e.preventDefault();
   const formData = new FormData(e.target);
   const userId = formData.get('user_id');
+  if (!userId || userId <= 0) {
+    displayResponse('update-user-response', { error: 'Valid User ID is required' }, true);
+    return;
+  }
   const data = {};
   if (formData.get('full_name')) data.full_name = formData.get('full_name');
   if (formData.get('phone_number')) data.phone_number = formData.get('phone_number');
-  if (formData.get('password')) data.password = formData.get('password');
-  data.is_admin = formData.get('is_admin') === 'on';
+  if (formData.get('password')) {
+    if (formData.get('password').length < 6) {
+      displayResponse('update-user-response', { error: 'Password must be at least 6 characters long' }, true);
+      return;
+    }
+    data.password = formData.get('password');
+  }
+  if (formData.get('is_admin') === 'on') data.is_admin = true;
+  
   try {
     const response = await fetch(`${BASE_URL}/users/${userId}`, {
       method: 'PUT',
@@ -103,6 +154,10 @@ document.getElementById('delete-user-form').addEventListener('submit', async (e)
   e.preventDefault();
   const formData = new FormData(e.target);
   const userId = formData.get('user_id');
+  if (!userId || userId <= 0) {
+    displayResponse('delete-user-response', { error: 'Valid User ID is required' }, true);
+    return;
+  }
   try {
     const response = await fetch(`${BASE_URL}/users/${userId}`, {
       method: 'DELETE',
@@ -122,6 +177,10 @@ document.getElementById('get-all-users-form').addEventListener('submit', async (
   const formData = new FormData(e.target);
   const page = formData.get('page') || 1;
   const perPage = formData.get('per_page') || 20;
+  if (page < 1 || perPage < 1) {
+    displayResponse('get-all-users-response', { error: 'Page and per_page must be positive integers' }, true);
+    return;
+  }
   try {
     const response = await fetch(`${BASE_URL}/users?page=${page}&per_page=${perPage}`, {
       method: 'GET',
@@ -141,6 +200,10 @@ document.getElementById('validate-password-form').addEventListener('submit', asy
   const formData = new FormData(e.target);
   const userId = formData.get('user_id');
   const data = { password: formData.get('password') };
+  if (!userId || userId <= 0) {
+    displayResponse('validate-password-response', { error: 'Valid User ID is required' }, true);
+    return;
+  }
   if (!data.password) {
     displayResponse('validate-password-response', { error: 'Password is required' }, true);
     return;
@@ -160,3 +223,49 @@ document.getElementById('validate-password-form').addEventListener('submit', asy
   }
 });
 
+// Search Users
+document.getElementById('search-users-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const query = encodeURIComponent(formData.get('q'));
+  const page = formData.get('page') || 1;
+  const perPage = formData.get('per_page') || 20;
+  if (!query) {
+    displayResponse('search-users-response', { error: 'Search query is required' }, true);
+    return;
+  }
+  if (page < 1 || perPage < 1) {
+    displayResponse('search-users-response', { error: 'Page and per_page must be positive integers' }, true);
+    return;
+  }
+  try {
+    const response = await fetch(`${BASE_URL}/users/search?q=${query}&page=${page}&per_page=${perPage}`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+    const result = await response.json();
+    if (!response.ok) throw result;
+    displayResponse('search-users-response', result);
+  } catch (error) {
+    displayResponse('search-users-response', error, true);
+  }
+});
+
+// Clear All Users
+document.getElementById('clear-all-users-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!confirm('Are you sure you want to delete all users? This action cannot be undone.')) {
+    return;
+  }
+  try {
+    const response = await fetch(`${BASE_URL}/users/clear-all`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    const result = await response.json();
+    if (!response.ok) throw result;
+    displayResponse('clear-all-users-response', result);
+  } catch (error) {
+    displayResponse('clear-all-users-response', error, true);
+  }
+});
