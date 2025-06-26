@@ -50,7 +50,7 @@
     </div>
 
     <!-- User Statistics -->
-    <div class="bg-white shadow-md rounded-lg p-6">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. User Statistics</h2>
       <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /analytics/users</code></p>
       <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves user statistics for a specified date range. Requires a valid session and admin privileges.</p>
@@ -67,6 +67,75 @@
       </form>
       <div id="user-stats-response" class="mt-4 text-sm"></div>
     </div>
+
+    <!-- Customer Retention Rate -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Customer Retention Rate</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /analytics/customer-retention</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves customer retention rate for a specified date range. Requires a valid session and admin privileges.</p>
+      <form id="customer-retention-form" class="space-y-4">
+        <div>
+          <label for="retention-start-date" class="block text-sm font-medium text-gray-700">Start Date (YYYY-MM-DD, optional)</label>
+          <input type="date" id="retention-start-date" name="start_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="retention-end-date" class="block text-sm font-medium text-gray-700">End Date (YYYY-MM-DD, optional)</label>
+          <input type="date" id="retention-end-date" name="end_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Retention Stats</button>
+      </form>
+      <div id="customer-retention-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Product Performance Trend -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Product Performance Trend</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /analytics/product-performance</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves performance trend for a specific product. Requires a valid session and admin privileges.</p>
+      <form id="product-performance-form" class="space-y-4">
+        <div>
+          <label for="product-id" class="block text-sm font-medium text-gray-700">Product ID (required)</label>
+          <input type="number" id="product-id" name="product_id" min="1" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="product-start-date" class="block text-sm font-medium text-gray-700">Start Date (YYYY-MM-DD, optional)</label>
+          <input type="date" id="product-start-date" name="start_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="product-end-date" class="block text-sm font-medium text-gray-700">End Date (YYYY-MM-DD, optional)</label>
+          <input type="date" id="product-end-date" name="end_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="interval" class="block text-sm font-medium text-gray-700">Interval</label>
+          <select id="interval" name="interval" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <option value="daily" selected>Daily</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Performance Trend</button>
+      </form>
+      <div id="product-performance-response" class="mt-4 text-sm"></div>
+    </div>
+
+    <!-- Discount Effectiveness -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Discount Effectiveness</h2>
+      <p class="text-gray-600 mb-4"><strong>Endpoint:</strong> <code class="bg-gray-200 px-2 py-1 rounded">GET /analytics/discount-effectiveness</code></p>
+      <p class="text-gray-600 mb-4"><strong>Description:</strong> Retrieves discount effectiveness metrics for a specified date range. Requires a valid session and admin privileges.</p>
+      <form id="discount-effectiveness-form" class="space-y-4">
+        <div>
+          <label for="discount-start-date" class="block text-sm font-medium text-gray-700">Start Date (YYYY-MM-DD, optional)</label>
+          <input type="date" id="discount-start-date" name="start_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="discount-end-date" class="block text-sm font-medium text-gray-700">End Date (YYYY-MM-DD, optional)</label>
+          <input type="date" id="discount-end-date" name="end_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch Discount Stats</button>
+      </form>
+      <div id="discount-effectiveness-response" class="mt-4 text-sm"></div>
+    </div>
+
   </div>
   <script src="/js/config.js"></script>
   <script src="/js/analytics.js"></script>
